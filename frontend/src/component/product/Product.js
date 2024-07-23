@@ -1,12 +1,11 @@
 import React from 'react'
-import Data from '/workspace/fullstack/frontend/src/database/data'
 import Card from './Card'
 
-function Product() {
+function Product({ data }) {
 
   return (
-    <div className='d-flex flex-wrap justify-content-around'>
-        {Data.map((item) => (
+    <div className='d-flex flex-wrap justify-content-start'>
+        {data.map((item) => (
             <Card 
                 key={item.id}
                 item={item}
