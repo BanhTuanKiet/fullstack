@@ -1,0 +1,19 @@
+
+.btn-containers {
+    width: 35%;
+    padding: 0 !important;
+}
+
+@media screen and (max-width: 992px) {
+    .btn-containers {
+        flex-direction: column;
+
+    }
+}
+
+@media (max-width: 991px) {
+    /* .btns {
+        width: ;
+    } */
+  }
+  

@@ -1,61 +1,127 @@
-import React, { useState } from 'react';
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-import { FaEye, FaEyeSlash } from "react-icons/fa"
+import React, { useContext, useEffect, useState } from 'react'
+import { Form, Button, Container, Row, Col } from 'react-bootstrap'
+import { UserContext } from '../Context/UseContext'
+import { Bounce, toast } from 'react-toastify'
+import Validation from '../Utils/Validation'
+import axios from 'axios'
 
 function Login() {
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPasword] = useState(false)
+    const { user, setUser, login, loginWithoutAcc } = useContext(UserContext)
+    const [disabledBtn, setDisabledBtn] = useState(true)
+    const [checked, setChecked] = useState(false)
 
-  const handlePassword = (event) => {
-    setPassword(event.target.value)
-    console.log(password)
-  }
+    useEffect(() => {
+        setDisabledBtn((user.email !== '' && user.password !== '') ? false : true)
+        if (checked) {
+          loginWithoutAcc()
+        }
+    }, [user, checked])
 
-  const handleShowPassword = (event) => {
-    // event.preventDefault()
-    setShowPasword(!showPassword)
-  }
+    const convertObject = (object) => {
+      let stringNotify = ''
+      if (object.email === '') {
+        stringNotify = object.password
+      } else if (object.password === '') {
+        stringNotify = object.email
+      } else {
+        stringNotify = object.email + "\n" + object.password
+      }
+      return stringNotify
+    }
+
+    const handleEmail = (event) => {
+      setUser({  ...user, email: event.target.value})
+    }
+
+    const handlePassword = (event) => {
+      setUser({  ...user, password: event.target.value})
+    }
+
+    const handleChecked = (event) => {
+      console.log(event.target.checked)
+      setChecked(event.target.checked)
+    }
+
+    const handleLogin = () => {
+      const valid = Validation(user)
+
+      if (valid.email === '' && valid.password === '') {
+        toast.success(`Welcome ${user.email}.`, {
+          position: "top-right",
+          autoClose: 800,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        })
+
+        // setTimeout(() => {
+          axios.post(`http://localhost:3000/login`, user)
+          .then(res => {
+            if (res.data.success) {
+              login(user.email, user.password)
+            }
+          })
+        // }, 1200)
+      } else {
+        const respond = convertObject(valid)
+        toast.warning(((respond)), {
+          position: "top-right",
+          autoClose: 800,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        })
+      }
+    }
 
   return (
-    <Container className="d-flex align-items-center justify-content-center" style={{ marginTop: "96px" }}>
-      <Row className="w-100">
-        <Col xs={12} md={6} lg={4} className="mx-auto">
+    <Container fluid className="d-flex vh-100">
+      <Row className="align-self-center w-100">
+        <Col lg={3} md={4} sm={6} xs={12} className="mx-auto">
           <Form>
-            <h3>Login</h3>
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Control 
+                type="email"
+                name='email'
+                placeholder="Enter email" 
+                value={user.email} 
+                onChange={handleEmail}
+              />
             </Form.Group>
 
-            <Form.Group className="mb-3 position-relative" controlId="formBasicPassword">
+            <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Control 
-                type={showPassword ? "text" : "password"} 
-                placeholder="Password"
-                value={password}
+                type="text" 
+                name='password'
+                placeholder="Password" 
+                value={user.password} 
                 onChange={handlePassword}
               />
-              <div 
-                className='position-absolute' 
-                style={{ 
-                  right: "10px", 
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer"
-                }}
-                onClick={handleShowPassword}
-              >
-                {showPassword ? <FaEye /> : <FaEyeSlash />}
-              </div>
             </Form.Group>
-            <div className="d-flex justify-content-center">
-              <Button variant="primary" type="submit">
-                Login
-              </Button>
+            <Form.Group>
+              {/* <Form.Check type='checkbox' className='my-3'>
+                <Form.Check.Input type="checkbox" isValid checked={checked} onChange={handleChecked} />
+                <Form.Check.Label>Continue without log in.</Form.Check.Label>
+              </Form.Check> */}
+            </Form.Group>
+            <div className='d-flex justify-content-center'>
+                <Button variant="outline-primary" onClick={handleLogin} disabled={disabledBtn}>
+                  Log in
+                </Button>
             </div>
           </Form>
         </Col>
       </Row>
     </Container>
-  );
+  )
 }
 
-export default Login;
+export default Login

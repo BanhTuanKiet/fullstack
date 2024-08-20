@@ -1,4 +1,6 @@
 body {
+  margin: 0 auto;
+  background-color: aliceblue;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -11,86 +13,3 @@ code {
     monospace;
 }
 
-.main-container {
-  /* display: flex;
-  flex-wrap: wrap;
-  height: 100vh; */
-}
-
-.card-shoe {
-  padding: 12px;
-  border-radius: 6px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.card-img {
-  width: 176px;
-  height: 105px;
-}
-
-img {
-  max-height: 105px;
-  width: 176px;
-}
-
-.card-title {
-  justify-content: left;
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-@media (min-width: 1200px) {
-  .card-shoe {
-    flex: 15%;
-    /* flex-grow: 0;  */
-    /* Ngăn thẻ mở rộng */
-    /* flex-shrink: 0; */
-     /* Ngăn thẻ co lại */
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1200px) {
-  .card-shoe {
-    flex: 20%;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 992px) {
-  .header {
-    width: 120px;
-  }
-  .card-shoe {
-    flex: 25%;
-  }
-}
-
-@media (min-width: 450px) and (max-width: 768px) {
-  .card-shoe {
-    flex: 33.33%;
-  }
-}
-
-@media (max-width: 450px) {
-  .card-shoe {
-    display: flex;
-    flex: 99%;
-  }
-  .card-img {
-    flex: 50%;
-  }
-  .card-describe {
-    align-self: center;
-    flex: 50%;
-  }
-}
-@media (max-width: 991px) {
-  .navbar-container {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 350px) {
-  .main-container {
-    display: none;
-  }
-}

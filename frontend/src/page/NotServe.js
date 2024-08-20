@@ -1,34 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Alert } from 'react-bootstrap'
+import React from 'react'
+import { Alert, AlertHeading } from 'react-bootstrap'
 
-function NotServe() {
-    const [widthScreen, setWidthScreen] = useState(true)
-
-    useEffect(() => {
-        const handleResize = () => {
-            const width = window.innerWidth
-            if (width < 350) {
-                setWidthScreen(false)
-            } else {
-                setWidthScreen(true)
-            }
-        }
-        window.addEventListener('resize', handleResize)
-
-        return () => {
-            window.removeEventListener('resize', handleResize)
-        }
-    }, [])
-
+function NotService() {
   return (
     <div>
-        {!widthScreen && (
-            <Alert variant='warning' className='mt-3'>
-                <Alert.Heading>This website does not support screens smaller than 350px. Please use a larger screen.</Alert.Heading>
-            </Alert>
-        )}
+        <Alert variant='danger' className='mt-3'>
+            <AlertHeading>404 Page Not Service</AlertHeading>
+            <p>You don't have permission access this page. You need login to use.</p>
+        </Alert>
     </div>
   )
 }
 
-export default NotServe
+export default NotService
