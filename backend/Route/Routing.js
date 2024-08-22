@@ -1,8 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { login, getListItem, getItem, getFavoriteItems } = require('../Controller/HomeController')
+const { login, signup, getListItem, getItem, getFavoriteItems, deleteFavoriteItem, postFavoriteItem } = require('../Controller/HomeController')
 
 router.post('/login', login)
+
+router.post('/signup', signup)
 
 router.get('/', getListItem)
 
@@ -10,10 +12,10 @@ router.get('/:shoe', getItem)
 
 // router.get('/:email', getListFavoritedItem)
 
-router.get('/item/:email', getFavoriteItems)
+router.get('/favorite/:name', getFavoriteItems)
 
-// router.delete('/:email/:shoe', deleteFavoriteItem)
+router.delete('/favorite', deleteFavoriteItem)
 
-// router.post('/', postFavoriteItem)
+router.post('/favorite', postFavoriteItem)
 
 module.exports = router

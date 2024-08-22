@@ -6,19 +6,17 @@ const UserContext = createContext({ email: '', password: '', auth: false })
 const UserProvider = ({ children }) => {
     const navigate = useNavigate()
     
-    const [user, setUser] = useState({
-        email: '',
-        password: ''
-        // const userLocal = localStorage.getItem('user')
-        // return JSON.parse(userLocal) || null
+    const [user, setUser] = useState(() => {
+        const userLocal = localStorage.getItem('user')
+        return JSON.parse(userLocal) || null
     })
 
-    // useEffect(() => {
-    //     localStorage.setItem('user', JSON.stringify(user))
-    // }, [user])
+    useEffect(() => {
+        localStorage.setItem('user', JSON.stringify(user))
+    }, [user])
 
-    const login = (email, password) => {
-        const newUser = { email: email, password: password, auth: true}
+    const login = (name, email, password) => {
+        const newUser = { name: name, email: email, password: password, auth: true}
         setUser(newUser)
         navigate('/')
     }
@@ -31,14 +29,15 @@ const UserProvider = ({ children }) => {
     }
 
     const logout = () => {
-        const newUser = { email: '', password: '', auth: false}
+        const newUser = { name: '', email: '', password: '', auth: false}
         setUser(newUser)
         localStorage.removeItem('user')
     }
     
-    const signup = (email, password) => {
-        const newUser = { email: email, password: password, auth: true}
-        setUser(newUser)
+    const signup = (name, email, password) => {
+        // const newUser = { name: name, email: email, password: password, auth: true}
+        // setUser(newUser)
+        // navigate('/login')
     }
 
     return (

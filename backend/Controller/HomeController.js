@@ -3,19 +3,45 @@ const db = require('../Config/ConfigDb')
 const login = (req, res) => {
     const { email, password } = req.body
 
-    const sql = "SELECT * FROM customer WHERE email = ? AND password = ?"
+    const sql = "SELECT name FROM customer WHERE email = ? AND password = ?"
 
     db.query(sql, [email, password], (err, data) => {
         if (err) {
             return res.json({ error: 'Internal Server Error.' })
         }
         if (data.length > 0) {
-            return res.json({ success: true, message: 'Login successful.' })
+            return res.json({ success: true, message: 'Login successful.', name: data})
         } else {
             return res.json({ success: false, message: 'Email not exist or password incorret.' })
         }
     })
 }
+
+const signup = (req, res) => {
+    const { name, email, password } = req.body
+
+    const checkEmailSql = "SELECT * FROM customer WHERE email = ?"
+
+    db.query(checkEmailSql, [email], (err, results) => {
+        if (err) {
+            return res.json({ error: 'Internal Server Error.' })
+        }
+
+        if (results.length > 0) {
+            return res.json({ success: false, message: 'Email đã được sử dụng.' })
+        } else {
+            const insertSql = "INSERT INTO customer (`email`, `name`, `password`) VALUES (?, ?, ?)";
+            
+            db.query(insertSql, [email, name, password], (err, data) => {
+                if (err) {
+                    return res.json({ error: 'Internal Server Error.' })
+                }
+                return res.json({ success: true, message: 'Sign up successfully.' })
+            })
+        }
+    })
+}
+
 
 const getListItem = (req, res) => {
     const sql = "SELECT * FROM shoes"
@@ -61,11 +87,11 @@ const getItem = (req, res) => {
 // }
 
 const getFavoriteItems = (req, res) => {
-    const email = req.params.email
+    const name = req.params.name
 
     const sql = "SELECT shoe_name FROM favorites WHERE cus_name = ?"
 
-    db.query(sql, [email], (err, data) => {
+    db.query(sql, [name], (err, data) => {
         if (err) {
             return res.json({ error: 'Internal Server Error.' })
         }
@@ -77,43 +103,42 @@ const getFavoriteItems = (req, res) => {
     })
 }
 
-// const deleteFavoriteItem = (req, res) => {
-//     const email = req.params.email
-//     const shoe = req.params.shoe
+const deleteFavoriteItem = (req, res) => {
+    const { name, shoe } = req.query
 
-//     const sql = "DELETE FROM favorites WHERE cus_name = ? AND shoe_name = ?"
+    const sql = "DELETE FROM favorites WHERE cus_name = ? AND shoe_name = ?"
 
-//     db.query(sql, [email, shoe], (err, data) => {
-//         if (err) {
-//             return res.json({ error: 'Internal Server Error.' })
-//         }
-//         if (data.affectedRows === 0) {
-//             return res.json( {success: false, message: "No matching records found." })
-//         }
-//         return res.json({ success: true, message: "Delete successfully."})
-//     })
-// }
+    db.query(sql, [name, shoe], (err, data) => {
+        if (err) {
+            return res.json({ error: 'Internal Server Error.' })
+        }
+        if (data.affectedRows === 0) {
+            return res.json( {success: false, message: "No matching records found." })
+        }
+        return res.json({ success: true, message: "Delete successfully."})
+    })
+}
 
-// const postFavoriteItem = (req, res) => {
-//     const { email, shoe } = req.body
+const postFavoriteItem = (req, res) => {
+    const { name, shoe } = req.body
 
-//     const sql = "INSERT INTO favorites (`cus_name`, `shoe_name`) VALUES (?, ?)"
+    const sql = "INSERT INTO favorites (`cus_name`, `shoe_name`) VALUES (?, ?)"
 
-//     db.query(sql, [email, shoe], (err, data) => {
-//         if (err) {
-//             return res.json({ err: "Error inserting data" })
-//         }
-        
-//         return res.json({ success: true, message: "Data inserted successfully" })
-//     })
-// }
+    db.query(sql, [name, shoe], (err, data) => {
+        if (err) {
+            return res.json({ err: "Error inserting data" })
+        }
+        return res.json({ success: true, message: "Data inserted successfully" })
+    })
+}
 
 module.exports = {
     login,
+    signup,
     getListItem,
     getItem,
     // getListFavoritedItem,
     getFavoriteItems,
-    // deleteFavoriteItem,
-    // postFavoriteItem,
+    deleteFavoriteItem,
+    postFavoriteItem,
 }

@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../Context/UseContext'
+import Validation from '../Utils/Validation'
+import axios from 'axios'
+import { Bounce, toast } from 'react-toastify'
 
 function Signup() {
   const navigate = useNavigate()
@@ -27,6 +30,48 @@ function Signup() {
 
   const handlePassword = (event) => {
     setUser({  ...user, password: event.target.value})
+  }
+
+  const handleSignup = () => {
+    // const valid = Validation(user)
+    // console.log(valid)
+
+    // if (valid.email === '' && valid.name === '' && valid.password === '') {
+    //   setTimeout(() => {
+    //     axios
+    //       .post(`http://localhost:3000/signup`, user)
+    //       .then(res => {
+    //         if (res.data.success) {
+    //           signup(user.name, user.email, user.password)
+    //         }
+    //         if (!res.data.success) {
+    //           toast.warning(((res.data.message)), {
+    //             position: "top-right",
+    //             autoClose: 1500,
+    //             hideProgressBar: false,
+    //             closeOnClick: true,
+    //             pauseOnHover: true,
+    //             draggable: true,
+    //             progress: undefined,
+    //             theme: "light",
+    //             transition: Bounce,
+    //           })
+    //         }
+    //       })
+    //   }, 1200)
+    // } else {
+    //   toast.warning(((JSON.stringify(valid))), {
+    //     position: "top-right",
+    //     autoClose: 1500,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "light",
+    //     transition: Bounce,
+    //   })
+    // }
   }
 
   return (
@@ -59,7 +104,7 @@ function Signup() {
                 type="password" 
                 name='password'
                 placeholder="Password" 
-                value={user.password} 
+
                 onChange={handlePassword}
               />
             </Form.Group>
@@ -67,8 +112,9 @@ function Signup() {
             <div className='d-flex justify-content-center'>
                 <Button variant="outline-primary" disabled={disabledBtn} 
                   onClick={() => {
-                    signup(user.email, user.password)
-                    navigate('/login')
+                    // signup(user.email, user.password)
+                    // navigate('/login')
+                    handleSignup()
                   }
                 }>
                   Sign up

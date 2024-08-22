@@ -4,39 +4,53 @@ import { UserContext } from '../Context/UseContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-function ModalItem({ show, setShow, selectedItem, favoritedItems }) {
+function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedItems }) {
+    const { user } = useContext(UserContext)
     const { id, name, star, price, company, color, category, quantity, img } = selectedItem
-    let shoe_name = favoritedItems.map((item) => {
-        return item.shoe_name
-    })
+
+    let shoe_name = []
+    if (user.email !== '' && user.email !== undefined) {
+        shoe_name = favoritedItems.map((item) => {
+            return item.shoe_name
+        })
+    
+    }
+
     const handleClose = () => setShow(false)
 
-    // const handleAddToCart = () => {
-    //     if (user.email === '') {
-    //         toast.warning("You must log in to continue.")
-    //     } else {
-    //         axios.get(`http://localhost:3000/${user.email}/${selectedItem}`)
-    //         .then(res => {
-    //             if (res.data.success) {
-    //                 axios.delete(`http://localhost:3000/${user.email}/${selectedItem}`)
-    //                 .then(result => {
-    //                     console.log(result.data.message)
-    //                 })
-    //             } else {
-    //                 axios.post('http://localhost:3000', { email: user.email, shoe: selectedItem })
-    //                 .then(result => {
-    //                     console.log(result.data.message)
-    //                 })
-    //             }
-    //         })
-    //     }
-    // }
+    const handleCart = () => {
+        if (user.email === '') {
+            return toast.warning("You must log in to continue.")
+        }
+        if (shoe_name.includes(name)) {
+            axios.delete(`http://localhost:3000/favorite?name=${user.name}&shoe=${name}`)
+            //     params : { 
+            //         name: user.name, shoe: name 
+            //     }
+            // })
+            .then(res => {
+                if (res.data.success) {
+                    const updatedFavorites = favoritedItems.filter(item => item.shoe_name !== name)
+                    setFavoritedItems(updatedFavorites)
+                }
+            })
+        } else {
+            axios.post(`http://localhost:3000/favorite`, { name: user.name, shoe: name })
+            .then(res => {
+                if (res.data.success) {
+                    setFavoritedItems(prevItems => [...prevItems, { shoe_name: name }])
+                }
+            })
+        }
+        
+    }
 
-    // const handleBuy = () => {
-    //     if (user.email === '') {
-    //         toast.warning("You must log in to continue!")
-    //     }
-    // }
+    const handleBuy = () => {
+        if (user.email === '') {
+            toast.warning("You must log in to continue!")
+        }
+        toast.success(name)
+    }
 
     return (
         <>
@@ -75,8 +89,8 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems }) {
                 </Card>
             </Modal.Body>
             <Modal.Footer>
-                {shoe_name.includes(name) ? <Button>Added to cart</Button>: <Button variant='white' className='btn-outline-primary'>Add to cart</Button>}
-                <Button variant='white' className="btn-outline-primary">Buy Now</Button>
+                {shoe_name.includes(name) ? <Button onClick={handleCart}>Added to cart</Button>: <Button onClick={handleCart} variant='white' className='btn-outline-primary'>Add to cart</Button>}
+                <Button variant='white' className="btn-outline-primary" onClick={handleBuy}>Buy Now</Button>
             </Modal.Footer>
           </Modal>
         </>

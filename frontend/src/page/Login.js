@@ -46,31 +46,50 @@ function Login() {
       const valid = Validation(user)
 
       if (valid.email === '' && valid.password === '') {
-        toast.success(`Welcome ${user.email}.`, {
-          position: "top-right",
-          autoClose: 800,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        })
+        // toast.success(`Welcome ${user.email}.`, {
+        //   position: "top-right",
+        //   autoClose: 800,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        //   transition: Bounce,
+        // })
 
-        // setTimeout(() => {
+        setTimeout(() => {
           axios.post(`http://localhost:3000/login`, user)
           .then(res => {
             if (res.data.success) {
-              login(user.email, user.password)
+              const jsonUsername = JSON.stringify(res.data.name)
+              let username = ''
+              for (let i = 10; i < 22; i++) {
+                username += jsonUsername[i]
+              }
+              console.log(username)
+              login(username, user.email, user.password)
+            }
+            if (!res.data.success) {
+              toast.warning(((res.data.message)), {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+              })
             }
           })
-        // }, 1200)
+        }, 1200)
       } else {
         const respond = convertObject(valid)
         toast.warning(((respond)), {
           position: "top-right",
-          autoClose: 800,
+          autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

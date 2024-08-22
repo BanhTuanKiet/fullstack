@@ -33,18 +33,15 @@ function Navigation({ setSelectedBrand, setSearch }) {
                         <Nav.Link href="" onClick={() => setSelectedBrand('Vans')}>Vans</Nav.Link>
                         <input class="form-control me-lg-2 py-2" type="search" placeholder="Search" aria-label="Search" onChange={handleSearch}/>
                     </Nav>
-                    <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="/profile">
-                            {user && 
-                                <i class="fa-solid fa-user"><span>{user.email}</span></i>
-                            }
-                        </NavDropdown.Item>
+                    <NavDropdown 
+                        title= {user ? <span>{user.name}</span> : <i class="fa-solid fa-user"></i>}
+                        id="basic-nav-dropdown">
                         {!user.auth && 
                             (<NavDropdown.Item onClick={handleSignup}>
                                 Signup
                             </NavDropdown.Item>)
                         }
-                        <NavDropdown.Divider />
+                        {!user.auth && <NavDropdown.Divider />}
                         <NavDropdown.Item onClick={handleLogin}>
                             {!user.auth ? "Log in" : "Log out"}
                         </NavDropdown.Item>

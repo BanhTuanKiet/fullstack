@@ -31,10 +31,11 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user.email !== '') {
-          const res = await axios.get(`http://localhost:3000/item/${user.email}`)
-          console.log(res.data.data)
-          setFavoritedItems(res.data.data)
+        if (user.name !== '' && user.name !== undefined) {
+          const res = await axios.get(`http://localhost:3000/favorite/${user.name}`)
+          if (res.data.success) {
+            setFavoritedItems(res.data.data)            
+          }
         }
       } catch (error) {
         console.error("Failed to fetch data:", error)
@@ -63,7 +64,7 @@ function Home() {
     <div>
         <Navigation setSelectedBrand={setSelectedBrand} setSearch={setSearch}/>
         <Products Data={newData} setShow={setShow} setSelectedItem={setSelectedItem}/>
-        <ModalItem show={show} setShow={setShow} selectedItem={selectedItem} favoritedItems={favoritedItems}/>
+        <ModalItem show={show} setShow={setShow} selectedItem={selectedItem} favoritedItems={favoritedItems} setFavoritedItems={setFavoritedItems}/>
     </div>
   )
 }

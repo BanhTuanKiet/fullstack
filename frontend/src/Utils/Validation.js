@@ -1,8 +1,17 @@
 const Validation = (user) => {
-    let errs = { email: '', password: '' }
+    let errs = { name: '', email: '', password: '' }
 
+    const name_pattern =  /^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
     const email_pattern = /^[^\s@]+@reqres.in$/
     const password_pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
+
+    if (user.name !== undefined) {
+        if (user.name === '') {
+            errs.name = 'Name should not be empty.'
+        } else if (!name_pattern.test(user.name)) {
+            errs.name = 'Name does not match the required format.'
+        }
+    } 
 
     if (user.email === '') {
         errs.email = 'Email should not be empty.'
