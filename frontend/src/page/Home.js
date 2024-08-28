@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Navigation from '../Navigation/Navigation'
 import Products from '../Products/Products'
-// import Data from '../Data/Data'
-import FilterData from '../Service/FilterData'
 import ModalItem from '../component/ModalItem'
-import axios from 'axios'
+import CustomineAxios from '../CustomineAxios/Axios'
 import { UserContext } from '../Context/UseContext'
+import { toast } from 'react-toastify'
 
 function Home() {
   const [newData, setNewData] = useState([])
@@ -19,8 +18,9 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/')
-        setNewData(response.data.data)
+        //getListItems
+        const response = await CustomineAxios.get()
+        setNewData(response.data)
       } catch (error) {
         console.error("Failed to fetch data:", error)
       }
@@ -29,12 +29,13 @@ function Home() {
   }, [])
   
   useEffect(() => {
+    //getFavoriteItems
     const fetchData = async () => {
       try {
-        if (user.name !== '' && user.name !== undefined) {
-          const res = await axios.get(`http://localhost:3000/favorite/${user.name}`)
-          if (res.data.success) {
-            setFavoritedItems(res.data.data)            
+        if (user.email !== '' && user.email !== undefined) {
+          const res = await CustomineAxios.get(`favorite/${user.email}`)
+          if (res.success) {
+            setFavoritedItems(res.data)            
           }
         }
       } catch (error) {
@@ -42,23 +43,55 @@ function Home() {
       }
     }
     fetchData()
-  }, [])
+  }, [user])
 
-  // useEffect(() => {
-  //   const filteredData = FilterData(Data, selectedBrand)
-  //   setNewData(filteredData)
-  // }, [selectedBrand])
+  useEffect(() => {
+    const fetchData = async () => {
+      if (selectedBrand === '') {
+        await CustomineAxios.get()
+        .then(res => {
+          if (res.success) {
+            setNewData(res.data)
+          }
+        })
+      }
+      // getDataByCompany
+      else {
+        await CustomineAxios.get(`company/${selectedBrand}`)
+        .then(res => {
+          if (res.success) {
+            setNewData(res.data)
+          }
+        })
+      }
+    }
+    fetchData()
+  }, [selectedBrand])
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     const data = Data.filter(item => 
-  //       item.title.toLowerCase().includes(search.toLocaleLowerCase())
-  //     )
-  //     setNewData(data)
-  //   }, 1000)
+  useEffect(() => {
+    //getItems
+    const timeout = setTimeout(async () => {
+        if (search !== '') {
+          await CustomineAxios.get(`items/${search}`)
+          .then(res => {
+            if (res.success) {
+              setNewData(res.data)
+            } else {
+              toast.warning(res.message)
+            }
+          })
+        } else {
+          await CustomineAxios.get()
+          .then(res => {
+            if (res.success) {
+              setNewData(res.data)
+            }
+          })
+        }
+    }, 500)
 
-  //   return () => clearTimeout(timeout)
-  // }, [search])
+    return () => clearTimeout(timeout)
+  }, [search])
 
   return (
     <div>

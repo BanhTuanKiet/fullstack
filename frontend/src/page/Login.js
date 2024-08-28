@@ -3,7 +3,7 @@ import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
 import { Bounce, toast } from 'react-toastify'
 import Validation from '../Utils/Validation'
-import axios from 'axios'
+import CustomineAxios from '../CustomineAxios/Axios'
 
 function Login() {
     const { user, setUser, login, loginWithoutAcc } = useContext(UserContext)
@@ -11,7 +11,7 @@ function Login() {
     const [checked, setChecked] = useState(false)
 
     useEffect(() => {
-        setDisabledBtn((user.email !== '' && user.password !== '') ? false : true)
+        setDisabledBtn((user.email !== '' && user.email !== undefined && user.password !== '' && user.password !== undefined) ? false : true)
         if (checked) {
           loginWithoutAcc()
         }
@@ -59,19 +59,20 @@ function Login() {
         // })
 
         setTimeout(() => {
-          axios.post(`http://localhost:3000/login`, user)
+          CustomineAxios.post(`/login`, user)
           .then(res => {
-            if (res.data.success) {
-              const jsonUsername = JSON.stringify(res.data.name)
-              let username = ''
-              for (let i = 10; i < 22; i++) {
-                username += jsonUsername[i]
-              }
-              console.log(username)
-              login(username, user.email, user.password)
+            if (res.success) {
+              // const jsonUsername = JSON.stringify(res.name)
+              // let username = ''
+              // for (let i = 10; i < jsonUsername.length; i++) {
+              //   if (i !== 9 && jsonUsername[i] === '"')
+              //     break
+              //   username += jsonUsername[i]
+              // }
+              login(res.data[0].name, user.email, user.password, res.data[0].avatar)
             }
-            if (!res.data.success) {
-              toast.warning(((res.data.message)), {
+            if (!res.success) {
+              toast.warning(((res.message)), {
                 position: "top-right",
                 autoClose: 1500,
                 hideProgressBar: false,

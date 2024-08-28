@@ -6,17 +6,25 @@ const UserContext = createContext({ email: '', password: '', auth: false })
 const UserProvider = ({ children }) => {
     const navigate = useNavigate()
     
-    const [user, setUser] = useState(() => {
+    const [user, setUser] = useState(
+    //     {
+    //     name: "",
+    //     email: "",
+    //     password: "",
+    //     auth: false
+    // }
+        () => {
         const userLocal = localStorage.getItem('user')
         return JSON.parse(userLocal) || null
-    })
+    }
+)
 
     useEffect(() => {
         localStorage.setItem('user', JSON.stringify(user))
     }, [user])
 
-    const login = (name, email, password) => {
-        const newUser = { name: name, email: email, password: password, auth: true}
+    const login = (name, email, password, avatar) => {
+        const newUser = { name: name, email: email, password: password, avatar: avatar, auth: true}
         setUser(newUser)
         navigate('/')
     }
@@ -35,9 +43,9 @@ const UserProvider = ({ children }) => {
     }
     
     const signup = (name, email, password) => {
-        // const newUser = { name: name, email: email, password: password, auth: true}
-        // setUser(newUser)
-        // navigate('/login')
+        const newUser = { name: name, email: email, password: password, auth: true}
+        setUser(newUser)
+        navigate('/login')
     }
 
     return (

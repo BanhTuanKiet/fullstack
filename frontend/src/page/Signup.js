@@ -41,11 +41,11 @@ function Signup() {
     //     axios
     //       .post(`http://localhost:3000/signup`, user)
     //       .then(res => {
-    //         if (res.data.success) {
+    //         if (res.success) {
     //           signup(user.name, user.email, user.password)
     //         }
-    //         if (!res.data.success) {
-    //           toast.warning(((res.data.message)), {
+    //         if (!res.success) {
+    //           toast.warning(((res.message)), {
     //             position: "top-right",
     //             autoClose: 1500,
     //             hideProgressBar: false,

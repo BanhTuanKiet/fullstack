@@ -1,57 +1,61 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { Button, Card, CardBody, CardImg, CardText, CardTitle, Modal } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import CustomineAxios from '../CustomineAxios/Axios'
 
 function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedItems }) {
     const { user } = useContext(UserContext)
     const { id, name, star, price, company, color, category, quantity, img } = selectedItem
 
     let shoe_name = []
-    if (user.email !== '' && user.email !== undefined) {
+    if (user.email !== '') {
         shoe_name = favoritedItems.map((item) => {
             return item.shoe_name
         })
-    
     }
 
     const handleClose = () => setShow(false)
-
+    console.log(favoritedItems)
     const handleCart = () => {
-        if (user.email === '') {
+        if (user.email === '' || user.email === undefined) {
             return toast.warning("You must log in to continue.")
         }
+        // deleteFavoriteItem
         if (shoe_name.includes(name)) {
-            axios.delete(`http://localhost:3000/favorite?name=${user.name}&shoe=${name}`)
-            //     params : { 
-            //         name: user.name, shoe: name 
-            //     }
-            // })
+            CustomineAxios.delete(`favorite?email=${user.email}&shoe=${name}`)
             .then(res => {
-                if (res.data.success) {
+                if (res.success) {
                     const updatedFavorites = favoritedItems.filter(item => item.shoe_name !== name)
                     setFavoritedItems(updatedFavorites)
                 }
             })
+        // postFavoriteItem
         } else {
-            axios.post(`http://localhost:3000/favorite`, { name: user.name, shoe: name })
+            CustomineAxios.post(`favorite`, { email: user.email, shoe: name })
             .then(res => {
-                if (res.data.success) {
+                if (res.success) {
                     setFavoritedItems(prevItems => [...prevItems, { shoe_name: name }])
                 }
             })
         }
         
     }
-
+    // purchaseItem
     const handleBuy = () => {
-        if (user.email === '') {
-            toast.warning("You must log in to continue!")
+        if (user.email === '' || user.email === undefined) {
+            return toast.warning("You must log in to continue!")
         }
-        toast.success(name)
+        CustomineAxios.put(`/items/purchase?id=${id}&name=${user.name}`)
+        .then(res => {
+            if (res.success) {
+                return toast.success(res.message)
+            }
+            toast.warning(res.message)
+        })
     }
 
+    
     return (
         <>
           <Modal show={show} onHide={handleClose} backdrop="static">

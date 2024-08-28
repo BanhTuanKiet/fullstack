@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import { Container, Nav, Navbar, NavDropdown, Image } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
 import { useNavigate } from 'react-router-dom'
 import '../Navigation/Navigation.css'
@@ -13,11 +13,16 @@ function Navigation({ setSelectedBrand, setSearch }) {
     }
 
     const handleLogin = (event) => {
-        user.auth ? logout() : navigate('/login')
+        (user.auth && user.auth !== undefined) ? logout() : navigate('/login')
     }
 
     const handleSignup = (event) => {
         navigate('/signup')
+    }
+
+    const handleProfile = (event) => {
+        event.preventDefault()
+        navigate('/profile')
     }
 
     return (
@@ -31,19 +36,29 @@ function Navigation({ setSelectedBrand, setSearch }) {
                         <Nav.Link href="" onClick={() => setSelectedBrand('Adidas')}>Adidas</Nav.Link>
                         <Nav.Link href="" onClick={() => setSelectedBrand('Puma')}>Puma</Nav.Link>
                         <Nav.Link href="" onClick={() => setSelectedBrand('Vans')}>Vans</Nav.Link>
-                        <input class="form-control me-lg-2 py-2" type="search" placeholder="Search" aria-label="Search" onChange={handleSearch}/>
+                        <input className="form-control me-lg-2 py-2" type="search" placeholder="Search" aria-label="Search" onChange={handleSearch}/>
                     </Nav>
                     <NavDropdown 
-                        title= {user ? <span>{user.name}</span> : <i class="fa-solid fa-user"></i>}
-                        id="basic-nav-dropdown">
-                        {!user.auth && 
+                        title= {user && 
+                            <span>
+                                <Image 
+                                    src={user.avatar} 
+                                    roundedCircle 
+                                    style={{ width: '48px', height: '48px' }} >
+                                </Image>
+                            </span>}
+                        // id="basic-nav-dropdown"
+                    >
+                        {(!user.auth && user.auth !== undefined) && 
                             (<NavDropdown.Item onClick={handleSignup}>
                                 Signup
                             </NavDropdown.Item>)
                         }
-                        {!user.auth && <NavDropdown.Divider />}
+                        {(!user.auth && user.auth !== undefined) && <NavDropdown.Divider />}
+                        <NavDropdown.Item onClick={handleProfile}>Profile</NavDropdown.Item>
+                        <NavDropdown.Divider />
                         <NavDropdown.Item onClick={handleLogin}>
-                            {!user.auth ? "Log in" : "Log out"}
+                            {(!user.auth && user.auth !== undefined) ? "Log in" : "Log out"}
                         </NavDropdown.Item>
                     </NavDropdown>
                 </Navbar.Collapse>
