@@ -7,21 +7,21 @@ const UserProvider = ({ children }) => {
     const navigate = useNavigate()
     
     const [user, setUser] = useState(
-    //     {
-    //     name: "",
-    //     email: "",
-    //     password: "",
-    //     auth: false
-    // }
-        () => {
-        const userLocal = localStorage.getItem('user')
-        return JSON.parse(userLocal) || null
+        {
+        name: "",
+        email: "",
+        password: "",
+        auth: false
     }
-)
+        // () => {
+        //     const userLocal = localStorage.getItem('user')
+        //     return JSON.parse(userLocal) || null
+        // }
+    )
 
-    useEffect(() => {
-        localStorage.setItem('user', JSON.stringify(user))
-    }, [user])
+    // useEffect(() => {
+    //     localStorage.setItem('user', JSON.stringify(user))
+    // }, [user])
 
     const login = (name, email, password, avatar) => {
         const newUser = { name: name, email: email, password: password, avatar: avatar, auth: true}
@@ -39,7 +39,7 @@ const UserProvider = ({ children }) => {
     const logout = () => {
         const newUser = { name: '', email: '', password: '', auth: false}
         setUser(newUser)
-        localStorage.removeItem('user')
+        // localStorage.removeItem('user')
     }
     
     const signup = (name, email, password) => {

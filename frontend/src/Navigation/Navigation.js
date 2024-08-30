@@ -49,17 +49,17 @@ function Navigation({ setSelectedBrand, setSearch }) {
                             </span>}
                         // id="basic-nav-dropdown"
                     >
-                        {(!user.auth && user.auth !== undefined) && 
-                            (<NavDropdown.Item onClick={handleSignup}>
-                                Signup
-                            </NavDropdown.Item>)
-                        }
-                        {(!user.auth && user.auth !== undefined) && <NavDropdown.Divider />}
                         <NavDropdown.Item onClick={handleProfile}>Profile</NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item onClick={handleLogin}>
                             {(!user.auth && user.auth !== undefined) ? "Log in" : "Log out"}
                         </NavDropdown.Item>
+                        {(!user.auth && user.auth !== undefined) && <NavDropdown.Divider />}
+                        {(!user.auth && user.auth !== undefined) && 
+                            (<NavDropdown.Item onClick={handleSignup}>
+                                Signup
+                            </NavDropdown.Item>)
+                        }
                     </NavDropdown>
                 </Navbar.Collapse>
             </Container>

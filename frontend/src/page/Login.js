@@ -12,10 +12,10 @@ function Login() {
 
     useEffect(() => {
         setDisabledBtn((user.email !== '' && user.email !== undefined && user.password !== '' && user.password !== undefined) ? false : true)
-        if (checked) {
-          loginWithoutAcc()
-        }
-    }, [user, checked])
+        // if (checked) {
+        //   loginWithoutAcc()
+        // }
+    }, [user])
 
     const convertObject = (object) => {
       let stringNotify = ''
@@ -70,6 +70,7 @@ function Login() {
               //   username += jsonUsername[i]
               // }
               login(res.data[0].name, user.email, user.password, res.data[0].avatar)
+              localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
             }
             if (!res.success) {
               toast.warning(((res.message)), {

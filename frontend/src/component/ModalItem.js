@@ -16,7 +16,6 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
     }
 
     const handleClose = () => setShow(false)
-    console.log(favoritedItems)
     const handleCart = () => {
         if (user.email === '' || user.email === undefined) {
             return toast.warning("You must log in to continue.")
@@ -46,12 +45,22 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
         if (user.email === '' || user.email === undefined) {
             return toast.warning("You must log in to continue!")
         }
-        CustomineAxios.put(`/items/purchase?id=${id}&name=${user.name}`)
+        const token = JSON.parse(localStorage.getItem('accessToken'))
+        CustomineAxios.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, {}, {
+            headers: {
+                'Authorization': `${token}`
+            }
+        })
         .then(res => {
             if (res.success) {
-                return toast.success(res.message)
+                console.log(res.message)
+                // return toast.success(res.message)
             }
-            toast.warning(res.message)
+            else console.log(res.success)
+            // toast.warning(res.message)
+        })
+        .catch(err => {
+            console.log(err)
         })
     }
 
