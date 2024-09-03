@@ -9,9 +9,11 @@ const authenToken = (req, res, next) => {
 
     try {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+        // Explanation token without validation.
+        // jwt.decode(token, process.env.ACCESS_TOKEN_SECRET)
         next()
     } catch (err) {
-        return res.sendStatus(403)
+        return res.json({ success: false, message: "Your session has expired. Please log in again."})
     }
 }
 

@@ -80,12 +80,18 @@ function Home() {
               toast.warning(res.message)
             }
           })
+          .catch(err => {
+            console.log(err)
+          })
         } else {
           await CustomineAxios.get()
           .then(res => {
             if (res.success) {
               setNewData(res.data)
             }
+          })
+          .catch(err => {
+            console.log(err)
           })
         }
     }, 500)

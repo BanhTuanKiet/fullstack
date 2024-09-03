@@ -3,12 +3,29 @@ const db = require('../Config/ConfigDb')
 const jwt = require('jsonwebtoken')
 let listItems = []
 
+const getPassword = (req, res, next) => {
+    const { email } = req.body
+
+    const sql = "SELECT encyptionPassword FROM customer WHERE email = ?"
+
+    db.query(sql, [email], (err, data) => {
+        if (err) {
+            return res.json({ message: 'Internal Server Error.' })
+        }
+        if (data.length > 0) {
+            req.hashedPassword = data[0].encyptionPassword
+            return next()
+        }
+        return res.json({ success: false, message: "User unexist." })
+    })
+}
+
 const login = (req, res) => {
-    const { email, password } = req.body
+    const { email } = req.body
 
-    const sql = "SELECT name, avatar FROM customer WHERE email = ? AND password = ?"
+    const sql = "SELECT name, avatar FROM customer WHERE email = ?"
 
-    db.query(sql, [email, password], (err, data) => {
+    db.query(sql, [email], (err, data) => {
         if (err) {
             return res.json({ error: 'Internal Server Error.' })
         }
@@ -17,9 +34,11 @@ const login = (req, res) => {
 //step 2: save token localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
 //step 3: get token JSON.parse(localStorage.getItem('accessToken')) and use axios(url, data, CONFIG)
 //step 4: check Token authenToken()
-            const accessToken = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: '1h'
-            })
+            const accessToken = jwt.sign(
+                { email: email }, 
+                process.env.ACCESS_TOKEN_SECRET, 
+                { expiresIn: '1m'}
+            )
             return res.json({ success: true, message: 'Login successful.', data: data, accessToken: accessToken })
         }
         return res.json({ success: false, message: 'Email not exist or password incorret.' })
@@ -65,43 +84,6 @@ const getListItem = (req, res) => {
         return res.json({ success: false, message: 'Email not exist or password incorret.' })
     })
 }
-
-
-// const getItem = (req, res) => {
-//     const name = req.params.shoe
-
-//     const sql = "SELECT * FROM shoes WHERE name = ?"
-
-//     db.query(sql, [name], (err, data) => {
-//         if (err) {
-//             return res.json({ error: 'Internal Server Error.' })
-//         }
-//         if (data.length > 0) {
-//             return res.json({ success: true, message: 'Get item successful.', data: data})
-//         }
-//         return res.json({ success: false, message: 'Item not exist.' })
-//     })
-// }
-
-// const getItems = (req, res) => {
-//     console.time("Time excute: ")
-//     const { items } = req.params   
-//     const values = `%${items}%`
-
-//     const sql = "SELECT * from shoes WHERE name LIKE ?"
-
-//     db.query(sql, [values], (err, data) => {
-//         if (err) {
-//             return res.json({ error: 'Interal Server Error.' })
-//         }
-//         if (data.length > 0) {
-//             console.timeEnd("Time excute: ")
-//             return res.json({ success: true, message: 'Get item successful.', data: data})
-//         }
-//         console.timeEnd("Time excute: ")
-//         return res.json({ success: false, message: 'Item not exist.' })
-//     })
-// }
 
 const getItems = (req, res) => {
     // console.time("Time excute: ")
@@ -163,23 +145,6 @@ const postFavoriteItem = (req, res) => {
     })
 }
 
-// const getDataByCompany = (req, res) => {
-//     console.time("Time excute: ")
-//     const { company } = req.params
-
-//     const sql = "SELECT * from shoes where company = ?"
-
-//     db.query(sql, [company], (err, data) => {
-//         if (err) {
-//             return res.json({ err: "Error inserting data" })
-//         }
-//         if (data.length > 0) {
-//             console.timeEnd("Time excute: ")
-//             return res.json({ success: true, message: "Get shoes with company = ", data: data })
-//         }
-//     })
-// }
-
 const getDataByCompany = (req, res) => {
     // console.time("Time excute: ")
     const { company } = req.params
@@ -220,6 +185,7 @@ const purchaseItem = (req, res) => {
 }
 
 module.exports = {
+    getPassword,
     login,
     signup,
     getListItem,

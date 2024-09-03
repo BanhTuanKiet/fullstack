@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Alert, AlertHeading } from 'react-bootstrap'
 
 function NotSupport({ widthScreen, setWidthScreen }) {
+    const [width, setWidth] = useState()
+
     useEffect(() => {
         const handleResize = () => {
-            const width = window.innerWidth
+            const currentWidth = window.innerWidth
+            setWidth(currentWidth)
             if (width < 350) {
                 setWidthScreen(false)
             } else {
@@ -16,7 +19,7 @@ function NotSupport({ widthScreen, setWidthScreen }) {
         return () => {
             window.removeEventListener('resize', handleResize)
         }
-    }, [widthScreen])
+    }, [width, widthScreen, setWidthScreen])
 
   return (
     <div>

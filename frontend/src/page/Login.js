@@ -4,6 +4,7 @@ import { UserContext } from '../Context/UseContext'
 import { Bounce, toast } from 'react-toastify'
 import Validation from '../Utils/Validation'
 import CustomineAxios from '../CustomineAxios/Axios'
+import AxiosLogin from '../Axios/Axios'
 
 function Login() {
     const { user, setUser, login, loginWithoutAcc } = useContext(UserContext)
@@ -42,51 +43,13 @@ function Login() {
       setChecked(event.target.checked)
     }
 
-    const handleLogin = () => {
-      const valid = Validation(user)
+    const handleLogin = async () => {
+      const valid =  Validation(user)
 
       if (valid.email === '' && valid.password === '') {
-        // toast.success(`Welcome ${user.email}.`, {
-        //   position: "top-right",
-        //   autoClose: 800,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        //   transition: Bounce,
-        // })
-
-        setTimeout(() => {
-          CustomineAxios.post(`/login`, user)
-          .then(res => {
-            if (res.success) {
-              // const jsonUsername = JSON.stringify(res.name)
-              // let username = ''
-              // for (let i = 10; i < jsonUsername.length; i++) {
-              //   if (i !== 9 && jsonUsername[i] === '"')
-              //     break
-              //   username += jsonUsername[i]
-              // }
-              login(res.data[0].name, user.email, user.password, res.data[0].avatar)
-              localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
-            }
-            if (!res.success) {
-              toast.warning(((res.message)), {
-                position: "top-right",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                transition: Bounce,
-              })
-            }
-          })
-        }, 1200)
+        const res = await AxiosLogin(user)
+        login(res.data[0].name, user.email, user.password, res.data[0].avatar)
+        localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
       } else {
         const respond = convertObject(valid)
         toast.warning(((respond)), {

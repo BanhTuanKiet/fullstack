@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { login, signup, getListItem, getItems, getFavoriteItems, deleteFavoriteItem, postFavoriteItem, getDataByCompany, purchaseItem } = require('../Controller/HomeController')
+const { getPassword, login, signup, getListItem, getItems, getFavoriteItems, deleteFavoriteItem, postFavoriteItem, getDataByCompany, purchaseItem } = require('../Controller/HomeController')
 const { authenToken } = require('../middleware/authenToken')
+const { encryptionPassword } = require('../encryption')
 
-router.post('/login', login)
+router.post('/login', getPassword, encryptionPassword, login)
 
 router.post('/signup', signup)
 

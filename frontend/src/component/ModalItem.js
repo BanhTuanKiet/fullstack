@@ -29,6 +29,9 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
                     setFavoritedItems(updatedFavorites)
                 }
             })
+            .catch(err => {
+                console.log(err)
+            })
         // postFavoriteItem
         } else {
             CustomineAxios.post(`favorite`, { email: user.email, shoe: name })
@@ -36,6 +39,9 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
                 if (res.success) {
                     setFavoritedItems(prevItems => [...prevItems, { shoe_name: name }])
                 }
+            })
+            .catch(err => {
+                console.log(err)
             })
         }
         
@@ -52,12 +58,7 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
             }
         })
         .then(res => {
-            if (res.success) {
-                console.log(res.message)
-                // return toast.success(res.message)
-            }
-            else console.log(res.success)
-            // toast.warning(res.message)
+            return toast.warning(res.message)
         })
         .catch(err => {
             console.log(err)
