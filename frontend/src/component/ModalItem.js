@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Button, Card, CardBody, CardImg, CardText, CardTitle, Modal } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
 import { toast } from 'react-toastify'
 import CustomineAxios from '../CustomineAxios/Axios'
 
-function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedItems }) {
+function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, favoritedItems, setFavoritedItems }) {
     const { user } = useContext(UserContext)
     const { id, name, star, price, company, color, category, quantity, img } = selectedItem
 
@@ -16,6 +16,15 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
     }
 
     const handleClose = () => setShow(false)
+
+    const handleNext = () => {
+        setIDItem(selectedItem.id + 1)
+    }
+
+    const handleBack = () => {
+        setIDItem(selectedItem.id - 1)
+    }
+    
     const handleCart = () => {
         if (user.email === '' || user.email === undefined) {
             return toast.warning("You must log in to continue.")
@@ -65,10 +74,9 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
         })
     }
 
-    
     return (
-        <>
-          <Modal show={show} onHide={handleClose} backdrop="static">
+        <div className='model-container d-flex justify-content-center align-items-center'>
+          <Modal show={show} onHide={handleClose} backdrop="static" className='modal'>
             <Modal.Header closeButton>
               <Modal.Title>{name}</Modal.Title>
             </Modal.Header>
@@ -102,12 +110,18 @@ function ModalItem({ show, setShow, selectedItem, favoritedItems, setFavoritedIt
                     </CardBody>
                 </Card>
             </Modal.Body>
-            <Modal.Footer>
-                {shoe_name.includes(name) ? <Button onClick={handleCart}>Added to cart</Button>: <Button onClick={handleCart} variant='white' className='btn-outline-primary'>Add to cart</Button>}
-                <Button variant='white' className="btn-outline-primary" onClick={handleBuy}>Buy Now</Button>
+            <Modal.Footer className='d-flex'>
+                <div className='flex-fill'>
+                        <i className="fa-solid fa-arrow-left" onClick={handleBack} />
+                        <i className="fa-solid fa-arrow-right" onClick={handleNext} />
+                </div>
+                <div className=' flex-fill'>
+                    {shoe_name.includes(name) ? <Button onClick={handleCart}>Added to cart</Button> : <Button onClick={handleCart} variant='white' className='btn-outline-primary'>Add to cart</Button>}
+                    <Button variant='white' className="btn-outline-primary" onClick={handleBuy}>Buy Now</Button>
+                </div>
             </Modal.Footer>
           </Modal>
-        </>
+        </div>
     )
 }
 

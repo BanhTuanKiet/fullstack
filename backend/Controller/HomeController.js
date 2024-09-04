@@ -3,6 +3,14 @@ const db = require('../Config/ConfigDb')
 const jwt = require('jsonwebtoken')
 let listItems = []
 
+const getItem = (req, res) => {
+    const { id } = req.params
+    const parsedId = Number(id)
+    const item = listItems.filter(i => i.id === parsedId)
+
+    return res.json({ success: true, message: "Get item.", data: item })
+}
+
 const getPassword = (req, res, next) => {
     const { email } = req.body
 
@@ -185,6 +193,7 @@ const purchaseItem = (req, res) => {
 }
 
 module.exports = {
+    getItem,
     getPassword,
     login,
     signup,

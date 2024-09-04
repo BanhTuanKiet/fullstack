@@ -1,16 +1,16 @@
 const express = require('express')
 const router = express.Router()
-const { getPassword, login, signup, getListItem, getItems, getFavoriteItems, deleteFavoriteItem, postFavoriteItem, getDataByCompany, purchaseItem } = require('../Controller/HomeController')
+const { getItem, getPassword, login, signup, getListItem, getItems, getFavoriteItems, deleteFavoriteItem, postFavoriteItem, getDataByCompany, purchaseItem } = require('../Controller/HomeController')
 const { authenToken } = require('../middleware/authenToken')
 const { encryptionPassword } = require('../encryption')
+
+router.get('/:id', getItem)
 
 router.post('/login', getPassword, encryptionPassword, login)
 
 router.post('/signup', signup)
 
 router.get('/', getListItem)
-
-// router.get('/:shoe', getItem)
 
 router.get('/items/:items', getItems)
 

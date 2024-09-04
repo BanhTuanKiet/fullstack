@@ -11,9 +11,23 @@ function Home() {
   const [selectedBrand, setSelectedBrand] = useState('')
   const [search, setSearch] = useState('')
   const [show, setShow] = useState(false)
+  const [idItem, setIDItem] = useState({})
   const [selectedItem, setSelectedItem] = useState({})
   const [favoritedItems, setFavoritedItems] = useState([])
   const { user } = useContext(UserContext)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        //getItem
+        const res = await CustomineAxios.get(`/${idItem}`)
+        setSelectedItem(res.data[0])
+      } catch (error) {
+        console.error("Failed to fetch data:", error)
+      }
+    }
+    fetchData()
+  }, [idItem])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,7 +117,7 @@ function Home() {
     <div>
         <Navigation setSelectedBrand={setSelectedBrand} setSearch={setSearch}/>
         <Products Data={newData} setShow={setShow} setSelectedItem={setSelectedItem}/>
-        <ModalItem show={show} setShow={setShow} selectedItem={selectedItem} favoritedItems={favoritedItems} setFavoritedItems={setFavoritedItems}/>
+        <ModalItem show={show} setShow={setShow} selectedItem={selectedItem} setSelectedItem={setSelectedItem} setIDItem={setIDItem} favoritedItems={favoritedItems} setFavoritedItems={setFavoritedItems}/>
     </div>
   )
 }
