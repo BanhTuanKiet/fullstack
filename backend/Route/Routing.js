@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { getItem, getPassword, login, signup, getListItem, getItems, getFavoriteItems, deleteFavoriteItem, postFavoriteItem, getDataByCompany, purchaseItem } = require('../Controller/HomeController')
 const { authenToken } = require('../middleware/authenToken')
-const { encryptionPassword } = require('../encryption')
+const { encryptionPassword } = require('../middleware/encryption')
 
 router.get('/:id', getItem)
 

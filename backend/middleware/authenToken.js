@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const authenToken = (req, res, next) => {
     const authorizationClient = req.headers['authorization']
     const token = authorizationClient && authorizationClient
+    console.log(authorizationClient)
 
     if (!token)
         return res.sendStatus(401)

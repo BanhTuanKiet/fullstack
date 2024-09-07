@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
-import { Bounce, toast } from 'react-toastify'
 import Validation from '../Utils/Validation'
 import CustomineAxios from '../CustomineAxios/Axios'
-import AxiosLogin from '../Axios/AxiosLogin'
+import { Success, Warning } from '../component/Notification'
 
 function Login() {
     const { user, setUser, login, loginWithoutAcc } = useContext(UserContext)
@@ -47,22 +46,25 @@ function Login() {
       const valid =  Validation(user)
 
       if (valid.email === '' && valid.password === '') {
-        const res = await AxiosLogin(user)
-        login(res.data[0].name, user.email, user.password, res.data[0].avatar)
-        localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
+        try {
+          const res = await CustomineAxios.post(`/login`, user, { 
+              headers: {
+                'password': user.password
+              }
+          })
+          if (res.success) {
+            Success(`Welcome ${res.data[0].name}`)
+            setTimeout(() => {
+              login(res.data[0].name, user.email, user.password, res.data[0].avatar)
+              localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
+            }, 1500)
+          }
+        } catch (error) {
+            console.log(error)
+        }
       } else {
         const respond = convertObject(valid)
-        toast.warning(((respond)), {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        })
+        Warning(respond)
       }
     }
 

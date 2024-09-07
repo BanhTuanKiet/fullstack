@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { Button, Card, CardBody, CardImg, CardText, CardTitle, Modal } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
-import { toast } from 'react-toastify'
 import CustomineAxios from '../CustomineAxios/Axios'
+import './MadalItem.css'
+import { Warning } from './Notification'
 
-function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, favoritedItems, setFavoritedItems }) {
+function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, setFavoritedItems }) {
     const { user } = useContext(UserContext)
-    const { id, name, star, price, company, color, category, quantity, img } = selectedItem
+    const { id, name, star, price, company, color, category, quantity, img } = selectedItem ?? {}
 
     let shoe_name = []
     if (user.email !== '') {
@@ -18,16 +19,18 @@ function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, fa
     const handleClose = () => setShow(false)
 
     const handleNext = () => {
-        setIDItem(selectedItem.id + 1)
+        if (id !== undefined)
+        id === 26 ? setIDItem(1) : setIDItem(id + 1)
     }
 
     const handleBack = () => {
-        setIDItem(selectedItem.id - 1)
+        if (id !== undefined)
+        id === 1 ? setIDItem(26) : setIDItem(id - 1)
     }
     
     const handleCart = () => {
         if (user.email === '' || user.email === undefined) {
-            return toast.warning("You must log in to continue.")
+            return Warning("You must log in to continue.")
         }
         // deleteFavoriteItem
         if (shoe_name.includes(name)) {
@@ -53,12 +56,11 @@ function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, fa
                 console.log(err)
             })
         }
-        
     }
     // purchaseItem
     const handleBuy = () => {
         if (user.email === '' || user.email === undefined) {
-            return toast.warning("You must log in to continue!")
+            return Warning("You must log in to continue!")
         }
         const token = JSON.parse(localStorage.getItem('accessToken'))
         CustomineAxios.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, {}, {
@@ -67,7 +69,7 @@ function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, fa
             }
         })
         .then(res => {
-            return toast.warning(res.message)
+            return Warning(res.message)
         })
         .catch(err => {
             console.log(err)
@@ -78,7 +80,7 @@ function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, fa
         <div className='model-container d-flex justify-content-center align-items-center'>
           <Modal show={show} onHide={handleClose} backdrop="static" className='modal'>
             <Modal.Header closeButton>
-              <Modal.Title>{name}</Modal.Title>
+              <Modal.Title >{name}</Modal.Title>
             </Modal.Header>
             <Modal.Body
                 className='p-0'
@@ -93,7 +95,7 @@ function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, fa
                         />
                     </div>
                     <CardBody className="p-2 w-50">
-                        <CardTitle className="card-title">{name}</CardTitle>
+                        <CardTitle className="card-title" style={name === 'DREAM PAIRS Court Shoes' ? { fontSize: '19px' } : {}}>{name}</CardTitle>
                         <CardText className="card-text text-muted my-1">{price}</CardText>
                         <div className="review-section d-flex justify-content-between ms-0">
                             <div className='d-flex flex-column'>
@@ -110,12 +112,12 @@ function ModalItem({ show, setShow, selectedItem, setSelectedItem, setIDItem, fa
                     </CardBody>
                 </Card>
             </Modal.Body>
-            <Modal.Footer className='d-flex'>
-                <div className='flex-fill'>
-                        <i className="fa-solid fa-arrow-left" onClick={handleBack} />
-                        <i className="fa-solid fa-arrow-right" onClick={handleNext} />
+            <Modal.Footer className='d-flex justify-content-between'>
+                <div className='d-flex justify-content-between' style={{ width: '46%' }}>
+                    <i className="fa-solid fa-arrow-left" onClick={handleBack} />
+                    <i className="fa-solid fa-arrow-right" onClick={handleBack} />
                 </div>
-                <div className=' flex-fill'>
+                <div className='d-flex justify-content-between' style={{ width: '48%' }}>
                     {shoe_name.includes(name) ? <Button onClick={handleCart}>Added to cart</Button> : <Button onClick={handleCart} variant='white' className='btn-outline-primary'>Add to cart</Button>}
                     <Button variant='white' className="btn-outline-primary" onClick={handleBuy}>Buy Now</Button>
                 </div>

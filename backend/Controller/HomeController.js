@@ -43,9 +43,7 @@ const login = (req, res) => {
 //step 3: get token JSON.parse(localStorage.getItem('accessToken')) and use axios(url, data, CONFIG)
 //step 4: check Token authenToken()
             const accessToken = jwt.sign(
-                { email: email }, 
-                process.env.ACCESS_TOKEN_SECRET, 
-                { expiresIn: '1m'}
+                { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m'}
             )
             return res.json({ success: true, message: 'Login successful.', data: data, accessToken: accessToken })
         }
@@ -106,7 +104,6 @@ const getItems = (req, res) => {
     // console.timeEnd("Time excute: ")
     return res.json({ success: false, message: 'Item not exist.' })
 }
-
 
 const getFavoriteItems = (req, res) => {
     const { email } = req.params

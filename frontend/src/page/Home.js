@@ -4,7 +4,7 @@ import Products from '../Products/Products'
 import ModalItem from '../component/ModalItem'
 import CustomineAxios from '../CustomineAxios/Axios'
 import { UserContext } from '../Context/UseContext'
-import { toast } from 'react-toastify'
+import { Warning } from '../component/Notification'
 
 function Home() {
   const [newData, setNewData] = useState([])
@@ -12,7 +12,9 @@ function Home() {
   const [search, setSearch] = useState('')
   const [show, setShow] = useState(false)
   const [idItem, setIDItem] = useState({})
-  const [selectedItem, setSelectedItem] = useState({})
+  const [selectedItem, setSelectedItem] = useState({
+    // id: '', name: '', star: '', price: '', company: '', color: '', category: '', quantity: '', img: ''
+  })
   const [favoritedItems, setFavoritedItems] = useState([])
   const { user } = useContext(UserContext)
 
@@ -20,8 +22,12 @@ function Home() {
     const fetchData = async () => {
       try {
         //getItem
-        const res = await CustomineAxios.get(`/${idItem}`)
-        setSelectedItem(res.data[0])
+        // if () {
+          const res = await CustomineAxios.get(`/${idItem}`)
+          setSelectedItem(res.data[0])
+        // } else {
+        //   return
+        // }
       } catch (error) {
         console.error("Failed to fetch data:", error)
       }
@@ -91,7 +97,7 @@ function Home() {
             if (res.success) {
               setNewData(res.data)
             } else {
-              toast.warning(res.message)
+              Warning(res.message)
             }
           })
           .catch(err => {
@@ -117,7 +123,7 @@ function Home() {
     <div>
         <Navigation setSelectedBrand={setSelectedBrand} setSearch={setSearch}/>
         <Products Data={newData} setShow={setShow} setSelectedItem={setSelectedItem}/>
-        <ModalItem show={show} setShow={setShow} selectedItem={selectedItem} setSelectedItem={setSelectedItem} setIDItem={setIDItem} favoritedItems={favoritedItems} setFavoritedItems={setFavoritedItems}/>
+        <ModalItem show={show} setShow={setShow} selectedItem={selectedItem} setIDItem={setIDItem} favoritedItems={favoritedItems} setFavoritedItems={setFavoritedItems}/>
     </div>
   )
 }
