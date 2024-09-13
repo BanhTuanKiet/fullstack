@@ -11,16 +11,14 @@ const encryptionPassword = (req, res, next) => {
         }
 
         if (isMatch) {
-            console.log("HasedPassword: ", hashedPassword)
-            console.log("Password: ", password)
-            console.log('Password is correct.')
+            // console.log("HasedPassword: ", hashedPassword)
+            // console.log("Password: ", password)
+            // console.log('Password is correct.')
             next()
         } else {
-            console.log('Password is incorrect.') 
+            console.log('Password is not incorrect.') 
         }
     })
-// })
-// })
 }
 
 module.exports = {

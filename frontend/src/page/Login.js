@@ -4,6 +4,7 @@ import { UserContext } from '../Context/UseContext'
 import Validation from '../Utils/Validation'
 import CustomineAxios from '../CustomineAxios/Axios'
 import { Success, Warning } from '../component/Notification'
+import Debounce from '../Utils/Debounce'
 
 function Login() {
     const { user, setUser, login, loginWithoutAcc } = useContext(UserContext)
@@ -43,30 +44,36 @@ function Login() {
     }
 
     const handleLogin = async () => {
-      const valid =  Validation(user)
+      console.log("Start login.")
+      // const valid =  Validation(user)
 
-      if (valid.email === '' && valid.password === '') {
-        try {
-          const res = await CustomineAxios.post(`/login`, user, { 
-              headers: {
-                'password': user.password
-              }
-          })
-          if (res.success) {
-            Success(`Welcome ${res.data[0].name}`)
-            setTimeout(() => {
-              login(res.data[0].name, user.email, user.password, res.data[0].avatar)
-              localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
-            }, 1500)
-          }
-        } catch (error) {
-            console.log(error)
-        }
-      } else {
-        const respond = convertObject(valid)
-        Warning(respond)
-      }
+      // if (valid.email === '' && valid.password === '') {
+      //   try {
+      //     const res = await CustomineAxios.post(`/login`, user, { 
+      //         headers: {
+      //           'password': user.password
+      //         }
+      //     })
+      //     if (res.success) {
+      //       Success(`Welcome ${res.data[0].name}`)
+      //       setTimeout(() => {
+      //         login(res.data[0].name, user.email, user.password, res.data[0].avatar)
+      //         localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
+      //         localStorage.setItem('accessTokenExpiry', JSON.stringify(res.accessTokenExpiry))
+      //         localStorage.setItem('refreshToken', JSON.stringify(res.refreshToken))
+      //         localStorage.setItem('refreshTokenExpiry', JSON.stringify(res.refreshTokenExpiry))
+      //       }, 1500)
+      //     }
+      //   } catch (error) {
+      //       console.log(error)
+      //   }
+      // } else {
+      //   const respond = convertObject(valid)
+      //   Warning(respond)
+      // }
     }
+
+    const debouncedLogin = Debounce(handleLogin, 500)
 
   return (
     <Container fluid className="d-flex vh-100">
@@ -99,7 +106,7 @@ function Login() {
               </Form.Check> */}
             </Form.Group>
             <div className='d-flex justify-content-center'>
-                <Button variant="outline-primary" onClick={handleLogin} disabled={disabledBtn}>
+                <Button variant="outline-primary" onClick={debouncedLogin} disabled={disabledBtn}>
                   Log in
                 </Button>
             </div>

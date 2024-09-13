@@ -3,7 +3,8 @@ import { Button, Card, CardBody, CardImg, CardText, CardTitle, Modal } from 'rea
 import { UserContext } from '../Context/UseContext'
 import CustomineAxios from '../CustomineAxios/Axios'
 import './MadalItem.css'
-import { Warning } from './Notification'
+import { Success, Warning } from './Notification'
+import AuthenToken from '../Utils/AuthenToken'
 
 function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, setFavoritedItems }) {
     const { user } = useContext(UserContext)
@@ -28,13 +29,20 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         id === 1 ? setIDItem(26) : setIDItem(id - 1)
     }
     
-    const handleCart = () => {
-        if (user.email === '' || user.email === undefined) {
+    const handleCart = async () => {
+        if (user.email === '') {
             return Warning("You must log in to continue.")
         }
         // deleteFavoriteItem
+        const authorize = await AuthenToken(user)
+
+        if (!authorize) {
+            return Warning("Your session expire. Please log in again!")
+        }
+
+
         if (shoe_name.includes(name)) {
-            CustomineAxios.delete(`favorite?email=${user.email}&shoe=${name}`)
+            await CustomineAxios.delete(`favorite?email=${user.email}&shoe=${name}`)
             .then(res => {
                 if (res.success) {
                     const updatedFavorites = favoritedItems.filter(item => item.shoe_name !== name)
@@ -46,7 +54,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             })
         // postFavoriteItem
         } else {
-            CustomineAxios.post(`favorite`, { email: user.email, shoe: name })
+            await CustomineAxios.post(`favorite`, { email: user.email, shoe: name })
             .then(res => {
                 if (res.success) {
                     setFavoritedItems(prevItems => [...prevItems, { shoe_name: name }])
@@ -58,18 +66,27 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         }
     }
     // purchaseItem
-    const handleBuy = () => {
+    const handleBuy = async () => {
         if (user.email === '' || user.email === undefined) {
             return Warning("You must log in to continue!")
         }
-        const token = JSON.parse(localStorage.getItem('accessToken'))
-        CustomineAxios.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, {}, {
+        const authorize = await AuthenToken(user)
+
+        if (!authorize) {
+            return Warning("Your session expire. Please log in again!")
+        }
+
+        const accessToken = JSON.parse(localStorage.getItem('accessToken'))
+        
+        await CustomineAxios.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, {}, {
             headers: {
-                'Authorization': `${token}`
+                'Authorization': `${accessToken}`
             }
         })
         .then(res => {
-            return Warning(res.message)
+            if (res.success) {
+                Success(res.message)
+            }
         })
         .catch(err => {
             console.log(err)
@@ -115,7 +132,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             <Modal.Footer className='d-flex justify-content-between'>
                 <div className='d-flex justify-content-between' style={{ width: '46%' }}>
                     <i className="fa-solid fa-arrow-left" onClick={handleBack} />
-                    <i className="fa-solid fa-arrow-right" onClick={handleBack} />
+                    <i className="fa-solid fa-arrow-right" onClick={handleNext} />
                 </div>
                 <div className='d-flex justify-content-between' style={{ width: '48%' }}>
                     {shoe_name.includes(name) ? <Button onClick={handleCart}>Added to cart</Button> : <Button onClick={handleCart} variant='white' className='btn-outline-primary'>Add to cart</Button>}
