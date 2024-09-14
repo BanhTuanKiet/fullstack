@@ -33,7 +33,6 @@ const AuthenToken = async ( user ) => {
                 })
                 return true
             } else {
-                console.log("............")
                 return false
             }
         }

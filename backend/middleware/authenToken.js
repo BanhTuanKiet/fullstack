@@ -14,7 +14,7 @@ const authenToken = (req, res, next) => {
         return res.json({ success: true, message: "Authentication successful." })
         // next()
     } catch (err) {
-        return res.json({ success: false, message: "Your session has expired. Please log in again."})
+        return res.status(403).json({ success: false, message: "Your session has expired. Please log in again."})
     }
 }
 

@@ -10,6 +10,7 @@ import Profile from '../page/Profile'
 
 function AppRoute({ widthScreen }) {
     const { user } = useContext(UserContext)
+    
     return (
         <>
             {widthScreen &&     

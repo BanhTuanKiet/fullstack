@@ -17,11 +17,11 @@ router.delete('/favorite', deleteFavoriteItem)
 router.post('/favorite', postFavoriteItem)
 
 
-routerB.post('/token/authenToken', authenToken)
+router.post('/token/authenToken', authenToken)
 
-routerB.post('/token/refreshToken', getNewToken)
+router.post('/token/refreshToken', getNewToken)
 
-routerB.put('/items/purchase', purchaseItem)
+router.put('/items/purchase', purchaseItem)
 
 module.exports = {
     router,

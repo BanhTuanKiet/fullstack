@@ -19,9 +19,9 @@ const UserProvider = ({ children }) => {
         // }
     )
 
-    // useEffect(() => {
-    //     localStorage.setItem('user', JSON.stringify(user))
-    // }, [user])
+    useEffect(() => {
+        localStorage.setItem('user', JSON.stringify(user))
+    }, [user])
 
     const login = (name, email, password, avatar) => {
         const newUser = { name: name, email: email, password: password, avatar: avatar, auth: true}

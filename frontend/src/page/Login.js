@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
 import Validation from '../Utils/Validation'
-import CustomineAxios from '../CustomineAxios/Axios'
-import { Success, Warning } from '../component/Notification'
+import AxiosNotAuthen from '../CustomineAxios/AxiosNotAuthen'
+import { Success, Warning } from '../Utils/Notification'
 import Debounce from '../Utils/Debounce'
 
 function Login() {
@@ -45,32 +45,30 @@ function Login() {
 
     const handleLogin = async () => {
       console.log("Start login.")
-      // const valid =  Validation(user)
+      const valid =  Validation(user)
 
-      // if (valid.email === '' && valid.password === '') {
-      //   try {
-      //     const res = await CustomineAxios.post(`/login`, user, { 
-      //         headers: {
-      //           'password': user.password
-      //         }
-      //     })
-      //     if (res.success) {
-      //       Success(`Welcome ${res.data[0].name}`)
-      //       setTimeout(() => {
-      //         login(res.data[0].name, user.email, user.password, res.data[0].avatar)
-      //         localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
-      //         localStorage.setItem('accessTokenExpiry', JSON.stringify(res.accessTokenExpiry))
-      //         localStorage.setItem('refreshToken', JSON.stringify(res.refreshToken))
-      //         localStorage.setItem('refreshTokenExpiry', JSON.stringify(res.refreshTokenExpiry))
-      //       }, 1500)
-      //     }
-      //   } catch (error) {
-      //       console.log(error)
-      //   }
-      // } else {
-      //   const respond = convertObject(valid)
-      //   Warning(respond)
-      // }
+      if (valid.email === '' && valid.password === '') {
+        try {
+          const res = await AxiosNotAuthen.post(`/login`, user, { 
+              headers: {
+                'password': user.password
+              }
+          })
+          if (res.success) {
+            Success(`Welcome ${res.data[0].name}`)
+            setTimeout(() => {
+              login(res.data[0].name, user.email, user.password, res.data[0].avatar)
+              localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
+              localStorage.setItem('refreshToken', JSON.stringify(res.refreshToken))
+            }, 1500)
+          }
+        } catch (error) {
+            console.log(error)
+        }
+      } else {
+        const respond = convertObject(valid)
+        Warning(respond)
+      }
     }
 
     const debouncedLogin = Debounce(handleLogin, 500)

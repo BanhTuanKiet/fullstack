@@ -3,7 +3,7 @@ import { Button, Card, CardBody, CardImg, CardText, CardTitle, Modal } from 'rea
 import { UserContext } from '../Context/UseContext'
 import CustomineAxios from '../CustomineAxios/Axios'
 import './MadalItem.css'
-import { Success, Warning } from './Notification'
+import { Success, Warning } from '../Utils/Notification'
 import AuthenToken from '../Utils/AuthenToken'
 
 function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, setFavoritedItems }) {
@@ -36,11 +36,6 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         // deleteFavoriteItem
         const authorize = await AuthenToken(user)
 
-        if (!authorize) {
-            return Warning("Your session expire. Please log in again!")
-        }
-
-
         if (shoe_name.includes(name)) {
             await CustomineAxios.delete(`favorite?email=${user.email}&shoe=${name}`)
             .then(res => {
@@ -71,10 +66,6 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             return Warning("You must log in to continue!")
         }
         const authorize = await AuthenToken(user)
-
-        if (!authorize) {
-            return Warning("Your session expire. Please log in again!")
-        }
 
         const accessToken = JSON.parse(localStorage.getItem('accessToken'))
         

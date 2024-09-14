@@ -10,9 +10,8 @@ const getNewToken = (req, res) => {
         { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m'}
     )
     const refreshToken = jwt.sign(
-        { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5m'}
+        { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2m'}
     )
-
 
     return res.json({ success: true, accessToken: accessToken, refreshToken: refreshToken })
 }

@@ -1,14 +1,18 @@
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import './Card.css'
+import Debounce from '../Utils/Debounce'
 
 function CustomCard({ item, setShow, setSelectedItem }) {
     const { id, name, star, price, company, color, category, quantity, img } = item
 
     const handleShowItem = () => {
+        console.log("Start show item.")
         setSelectedItem(item)
         setShow(true)
     }
+
+    const debouncedShowItem = Debounce(handleShowItem)
 
     return (
         <Card className="custom-card">
@@ -35,7 +39,7 @@ function CustomCard({ item, setShow, setSelectedItem }) {
                         </div>
                     </div>
                     <div className='container-btn'>
-                        <Button variant="outline-primary" className="btn-buy" onClick={handleShowItem}>Details</Button>
+                        <Button variant="outline-primary" className="btn-buy" onClick={debouncedShowItem}>Details</Button>
                     </div>
                 </div>
             </Card.Body>

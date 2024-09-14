@@ -3,8 +3,9 @@ import Navigation from '../Navigation/Navigation'
 import Products from '../Products/Products'
 import ModalItem from '../component/ModalItem'
 import CustomineAxios from '../CustomineAxios/Axios'
+import AxiosNotAuthen from '../CustomineAxios/AxiosNotAuthen'
 import { UserContext } from '../Context/UseContext'
-import { Warning } from '../component/Notification'
+import { Warning } from '../Utils/Notification'
 
 function Home() {
   const [newData, setNewData] = useState([])
@@ -12,9 +13,7 @@ function Home() {
   const [search, setSearch] = useState('')
   const [show, setShow] = useState(false)
   const [idItem, setIDItem] = useState({})
-  const [selectedItem, setSelectedItem] = useState({
-    // id: '', name: '', star: '', price: '', company: '', color: '', category: '', quantity: '', img: ''
-  })
+  const [selectedItem, setSelectedItem] = useState({})
   const [favoritedItems, setFavoritedItems] = useState([])
   const { user } = useContext(UserContext)
 
@@ -22,12 +21,8 @@ function Home() {
     const fetchData = async () => {
       try {
         //getItem
-        // if () {
           const res = await CustomineAxios.get(`/${idItem}`)
           setSelectedItem(res.data[0])
-        // } else {
-        //   return
-        // }
       } catch (error) {
         console.error("Failed to fetch data:", error)
       }
@@ -39,7 +34,7 @@ function Home() {
     const fetchData = async () => {
       try {
         //getListItems
-        const response = await CustomineAxios.get()
+        const response = await AxiosNotAuthen.get()
         setNewData(response.data)
       } catch (error) {
         console.error("Failed to fetch data:", error)
