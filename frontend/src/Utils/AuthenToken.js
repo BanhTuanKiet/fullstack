@@ -12,9 +12,7 @@ const AuthenToken = async ( user ) => {
         })
 
         if (authAccess.success) {
-            console.log(authAccess)
             console.log('Access token is still valid.')
-            return true
         } else {
             const authRefresh =  await CustomineAxios.post(`/token/authenToken`, user, {
                 headers: {
@@ -22,7 +20,6 @@ const AuthenToken = async ( user ) => {
                 }
             })
             if (authRefresh.success) {
-                console.log(authRefresh)
                 console.log('Refresh token is still valid.')
                 CustomineAxios.post(`/token/refreshToken`, user)
                 .then(res => {
@@ -31,11 +28,11 @@ const AuthenToken = async ( user ) => {
                 .catch(err => {
                     console.log(err)
                 })
-                return true
             } else {
                 return false
             }
         }
+        return true
     } catch (error) {
         console.log(error)
     }

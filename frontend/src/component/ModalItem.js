@@ -9,6 +9,8 @@ import AuthenToken from '../Utils/AuthenToken'
 function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, setFavoritedItems }) {
     const { user } = useContext(UserContext)
     const { id, name, star, price, company, color, category, quantity, img } = selectedItem ?? {}
+    const accessToken = JSON.parse(localStorage.getItem('accessToken'))
+    const refreshToken = JSON.parse(localStorage.getItem('refreshToken'))
 
     let shoe_name = []
     if (user.email !== '') {
@@ -21,12 +23,12 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
 
     const handleNext = () => {
         if (id !== undefined)
-        id === 26 ? setIDItem(1) : setIDItem(id + 1)
+            id === 26 ? setIDItem(1) : setIDItem(id + 1)
     }
 
     const handleBack = () => {
         if (id !== undefined)
-        id === 1 ? setIDItem(26) : setIDItem(id - 1)
+            id === 1 ? setIDItem(26) : setIDItem(id - 1)
     }
     
     const handleCart = async () => {
@@ -34,7 +36,6 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             return Warning("You must log in to continue.")
         }
         // deleteFavoriteItem
-        const authorize = await AuthenToken(user)
 
         if (shoe_name.includes(name)) {
             await CustomineAxios.delete(`favorite?email=${user.email}&shoe=${name}`)
@@ -65,11 +66,8 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         if (user.email === '' || user.email === undefined) {
             return Warning("You must log in to continue!")
         }
-        const authorize = await AuthenToken(user)
-
-        const accessToken = JSON.parse(localStorage.getItem('accessToken'))
         
-        await CustomineAxios.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, {}, {
+        await CustomineAxios.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, {refreshToken}, {
             headers: {
                 'Authorization': `${accessToken}`
             }

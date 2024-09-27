@@ -3,19 +3,6 @@ const db = require('../Config/ConfigDb')
 const jwt = require('jsonwebtoken')
 let listItems = []
 
-const getNewToken = (req, res) => {
-    const { email } = req.body
-
-    const accessToken = jwt.sign(
-        { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m'}
-    )
-    const refreshToken = jwt.sign(
-        { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2m'}
-    )
-
-    return res.json({ success: true, accessToken: accessToken, refreshToken: refreshToken })
-}
-
 const getItem = (req, res) => {
     const { id } = req.params
     const parsedId = Number(id)
@@ -55,8 +42,8 @@ const login = (req, res) => {
 //step 2: save token localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
 //step 3: get token JSON.parse(localStorage.getItem('accessToken')) and use axios(url, data, CONFIG)
 //step 4: check Token authenToken()
-            const accessTokenExpiry = Math.floor(Date.now() / 1000) + 60
-            const refreshTokenExpiry = Math.floor(Date.now() / 1000) + 1800
+            // const accessTokenExpiry = Math.floor(Date.now() / 1000) + 60
+            // const refreshTokenExpiry = Math.floor(Date.now() / 1000) + 1800
             const accessToken = jwt.sign(
                 { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m'}
             )
@@ -67,7 +54,7 @@ const login = (req, res) => {
             return res.json({ 
                 success: true, message: 'Login successful.', data: data, 
                 accessToken: accessToken, refreshToken: refreshToken, 
-                accessTokenExpiry: accessTokenExpiry, refreshTokenExpiry: refreshTokenExpiry 
+                // accessTokenExpiry: accessTokenExpiry, refreshTokenExpiry: refreshTokenExpiry 
             })
         }
         return res.json({ success: false, message: 'Email not exist or password incorret.' })
@@ -203,7 +190,7 @@ const purchaseItem = (req, res) => {
                 if (errInsertTransactionSql) {
                     return res.json({ err: "Error insert transaction data" })
                 }
-                return res.json({ success: true, message: "Purchase successful." })
+                return res.json({ success: true, message: "Purchase successful.", accessToken: req.accessToken,  refreshToken: req.refreshToken })
             })
         }
         else {
@@ -213,7 +200,6 @@ const purchaseItem = (req, res) => {
 }
 
 module.exports = {
-    getNewToken,
     getItem,
     getPassword,
     login,

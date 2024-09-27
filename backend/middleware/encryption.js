@@ -16,7 +16,7 @@ const encryptionPassword = (req, res, next) => {
             // console.log('Password is correct.')
             next()
         } else {
-            console.log('Password is not incorrect.') 
+            return res.json({ success: false, message: "Password is not correct!" }) 
         }
     })
 }

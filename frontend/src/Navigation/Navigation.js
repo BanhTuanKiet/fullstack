@@ -1,22 +1,53 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Container, Nav, Navbar, NavDropdown, Image } from 'react-bootstrap'
+import CustomineAxios from '../CustomineAxios/Axios'
 import { UserContext } from '../Context/UseContext'
 import { useNavigate } from 'react-router-dom'
 import '../Navigation/Navigation.css'
 
-function Navigation({ setSelectedBrand, setSearch }) {
-    const navigate = useNavigate()
+function Navigation({ setSearch, setNewData }) {
+    const [selectedBrand, setSelectedBrand] = useState('')
     const { user, logout } = useContext(UserContext)
+    const navigate = useNavigate()
+
+    const fetchDataByBrand = async (event) => {
+        const curSelectedBrand = event.target.id
+    
+        if (selectedBrand === curSelectedBrand) {
+            return
+        }
+    
+        setSelectedBrand(curSelectedBrand)
+    
+        try {
+            if (curSelectedBrand === '') {
+                console.log("Fetching all data")
+                const res = await CustomineAxios.get()
+                if (res.success) {
+                    setNewData(res.data)
+                }
+            } else {
+                console.log(`Fetching data for brand: ${curSelectedBrand}`)
+                const res = await CustomineAxios.get(`company/${curSelectedBrand}`)
+                if (res.success) {
+                    setNewData(res.data)
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching data by brand:", error)
+        }
+    }
+    
 
     const handleSearch = (event) => {
         setSearch(event.target.value)
     }
 
-    const handleLogin = (event) => {
+    const handleLogin = () => {
         (user.auth && user.auth !== undefined) ? logout() : navigate('/login')
     }
 
-    const handleSignup = (event) => {
+    const handleSignup = () => {
         navigate('/signup')
     }
 
@@ -28,14 +59,14 @@ function Navigation({ setSelectedBrand, setSearch }) {
     return (
         <Navbar expand="lg" className="bg-body-tertiary d-flex justify-content-center">
             <Container className='mx-1'>
-                <Navbar.Brand href="" onClick={() => setSelectedBrand('')}>React-Bootstrap</Navbar.Brand>
+                <Navbar.Brand href="" onClick={fetchDataByBrand}>React-Bootstrap</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="" onClick={() => setSelectedBrand('Nike')}>Nike</Nav.Link>
-                        <Nav.Link href="" onClick={() => setSelectedBrand('Adidas')}>Adidas</Nav.Link>
-                        <Nav.Link href="" onClick={() => setSelectedBrand('Puma')}>Puma</Nav.Link>
-                        <Nav.Link href="" onClick={() => setSelectedBrand('Vans')}>Vans</Nav.Link>
+                        <Nav.Link href="" id='Nike' onClick={fetchDataByBrand}>Nike</Nav.Link>
+                        <Nav.Link href="" id='Adidas' onClick={fetchDataByBrand}>Adidas</Nav.Link>
+                        <Nav.Link href="" id='Puma' onClick={fetchDataByBrand}>Puma</Nav.Link>
+                        <Nav.Link href="" id='Vans' onClick={fetchDataByBrand}>Vans</Nav.Link>
                         <input className="form-control me-lg-2 py-2" type="search" placeholder="Search" aria-label="Search" onChange={handleSearch}/>
                     </Nav>
                     <NavDropdown 

@@ -9,7 +9,6 @@ import { Warning } from '../Utils/Notification'
 
 function Home() {
   const [newData, setNewData] = useState([])
-  const [selectedBrand, setSelectedBrand] = useState('')
   const [search, setSearch] = useState('')
   const [show, setShow] = useState(false)
   const [idItem, setIDItem] = useState({})
@@ -21,19 +20,23 @@ function Home() {
     const fetchData = async () => {
       try {
         //getItem
+          console.log("get item")
           const res = await CustomineAxios.get(`/${idItem}`)
           setSelectedItem(res.data[0])
       } catch (error) {
         console.error("Failed to fetch data:", error)
       }
     }
-    fetchData()
+    if (idItem !== undefined) {
+      fetchData()
+    }
   }, [idItem])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         //getListItems
+        console.log("get list items")
         const response = await AxiosNotAuthen.get()
         setNewData(response.data)
       } catch (error) {
@@ -48,6 +51,7 @@ function Home() {
     const fetchData = async () => {
       try {
         if (user.email !== '' && user.email !== undefined) {
+          console.log("get favorite items")
           const res = await CustomineAxios.get(`favorite/${user.email}`)
           if (res.success) {
             setFavoritedItems(res.data)            
@@ -61,32 +65,10 @@ function Home() {
   }, [user])
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (selectedBrand === '') {
-        await CustomineAxios.get()
-        .then(res => {
-          if (res.success) {
-            setNewData(res.data)
-          }
-        })
-      }
-      // getDataByCompany
-      else {
-        await CustomineAxios.get(`company/${selectedBrand}`)
-        .then(res => {
-          if (res.success) {
-            setNewData(res.data)
-          }
-        })
-      }
-    }
-    fetchData()
-  }, [selectedBrand])
-
-  useEffect(() => {
     //getItems
-    const timeout = setTimeout(async () => {
+    const fetchData = setTimeout(async () => {
         if (search !== '') {
+          console.log("get items")
           await CustomineAxios.get(`items/${search}`)
           .then(res => {
             if (res.success) {
@@ -110,13 +92,12 @@ function Home() {
           })
         }
     }, 500)
-
-    return () => clearTimeout(timeout)
+    return () => clearTimeout(fetchData)
   }, [search])
 
   return (
     <div>
-        <Navigation setSelectedBrand={setSelectedBrand} setSearch={setSearch}/>
+        <Navigation setSearch={setSearch} setNewData={setNewData}/>
         <Products Data={newData} setShow={setShow} setSelectedItem={setSelectedItem}/>
         <ModalItem show={show} setShow={setShow} selectedItem={selectedItem} setIDItem={setIDItem} favoritedItems={favoritedItems} setFavoritedItems={setFavoritedItems}/>
     </div>

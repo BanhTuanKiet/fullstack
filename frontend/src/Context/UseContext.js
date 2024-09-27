@@ -7,16 +7,16 @@ const UserProvider = ({ children }) => {
     const navigate = useNavigate()
     
     const [user, setUser] = useState(
-        {
-        name: "",
-        email: "",
-        password: "",
-        auth: false
-    }
-        // () => {
-        //     const userLocal = localStorage.getItem('user')
-        //     return JSON.parse(userLocal) || null
-        // }
+    //     {
+    //     name: "",
+    //     email: "",
+    //     password: "",
+    //     auth: false
+    // }
+        () => {
+            const userLocal = localStorage.getItem('user')
+            return JSON.parse(userLocal) || null
+        }
     )
 
     useEffect(() => {
