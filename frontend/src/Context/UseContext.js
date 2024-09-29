@@ -7,16 +7,16 @@ const UserProvider = ({ children }) => {
     const navigate = useNavigate()
     
     const [user, setUser] = useState(
-    //     {
-    //     name: "",
-    //     email: "",
-    //     password: "",
-    //     auth: false
-    // }
-        () => {
-            const userLocal = localStorage.getItem('user')
-            return JSON.parse(userLocal) || null
-        }
+        {
+        name: "",
+        email: "",
+        password: "",
+        auth: false
+    }
+        // () => {
+        //     const userLocal = localStorage.getItem('user')
+        //     return JSON.parse(userLocal) || null
+        // }
     )
 
     useEffect(() => {
@@ -39,7 +39,9 @@ const UserProvider = ({ children }) => {
     const logout = () => {
         const newUser = { name: '', email: '', password: '', auth: false}
         setUser(newUser)
-        // localStorage.removeItem('user')
+        localStorage.removeItem('user')
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
     }
     
     const signup = (name, email, password) => {

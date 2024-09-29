@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const accessToken = (req, res, next) => {
-    const authorizationClient = req.headers['authorization'] || req.headers['Authorization']
+    const authorizationClient = req.headers['authorization']
     const token = authorizationClient && authorizationClient
 
     if (!token)

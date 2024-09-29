@@ -4,7 +4,7 @@ import './Card.css'
 import Debounce from '../Utils/Debounce'
 
 function CustomCard({ item, setShow, setSelectedItem }) {
-    const { id, name, star, price, company, color, category, quantity, img } = item
+    const { id, name, star, price, img } = item
 
     const handleShowItem = () => {
         console.log("Start show item.")

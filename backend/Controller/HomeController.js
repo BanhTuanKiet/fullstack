@@ -118,18 +118,23 @@ const getItems = (req, res) => {
 const getFavoriteItems = (req, res) => {
     const { email } = req.params
 
-    const sql = "SELECT shoe_name FROM favorites WHERE cus_email = ?"
-
+    const sql = `SELECT shoes.id, shoes.name, shoes.star, shoes.price, shoes.img
+                FROM shoes
+                JOIN favorites ON shoes.name = favorites.shoe_name
+                WHERE favorites.cus_email = ?` 
+                
     db.query(sql, [email], (err, data) => {
         if (err) {
             return res.json({ error: 'Internal Server Error.' })
         }
+
         if (data.length > 0) {
             return res.json({ success: true, data: data })
         }
         return res.json({ success: false })
     })
 }
+
 
 const deleteFavoriteItem = (req, res) => {
     const { email, shoe } = req.query
@@ -143,13 +148,14 @@ const deleteFavoriteItem = (req, res) => {
         if (data.affectedRows === 0) {
             return res.json( {success: false, message: "No matching records found." })
         }
+        console.log("Data affectedRows: ", data)
         return res.json({ success: true, message: "Delete successfully."})
     })
 }
 
 const postFavoriteItem = (req, res) => {
-    const { email, shoe } = req.body
-
+    const { email, shoe } = req.query
+    console.log("post")
     const sql = "INSERT INTO favorites (`cus_email`, `shoe_name`) VALUES (?, ?)"
 
     db.query(sql, [email, shoe], (err, data) => {

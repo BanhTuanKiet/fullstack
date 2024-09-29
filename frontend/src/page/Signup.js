@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../Context/UseContext'
-import Validation from '../Utils/Validation'
 import axios from 'axios'
 import { Bounce, toast } from 'react-toastify'
+import Debounce from '../Utils/Debounce'
 
 function Signup() {
   const navigate = useNavigate()
@@ -33,8 +33,6 @@ function Signup() {
   }
 
   const handleSignup = () => {
-    // const valid = Validation(user)
-    // console.log(valid)
 
     // if (valid.email === '' && valid.name === '' && valid.password === '') {
     //   setTimeout(() => {
@@ -74,6 +72,8 @@ function Signup() {
     // }
   }
 
+  const debouncedSignup = Debounce(signup, 500)
+
   return (
     <Container fluid className="d-flex vh-100">
       <Row className="align-self-center w-100">
@@ -110,13 +110,7 @@ function Signup() {
             </Form.Group>
 
             <div className='d-flex justify-content-center'>
-                <Button variant="outline-primary" disabled={disabledBtn} 
-                  onClick={() => {
-                    // signup(user.email, user.password)
-                    // navigate('/login')
-                    handleSignup()
-                  }
-                }>
+                <Button variant="outline-primary" disabled={disabledBtn} onClick={debouncedSignup}>
                   Sign up
                 </Button>
             </div>

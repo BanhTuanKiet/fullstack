@@ -8,6 +8,7 @@ import '../Navigation/Navigation.css'
 function Navigation({ setSearch, setNewData }) {
     const [selectedBrand, setSelectedBrand] = useState('')
     const { user, logout } = useContext(UserContext)
+
     const navigate = useNavigate()
 
     const fetchDataByBrand = async (event) => {
@@ -47,13 +48,19 @@ function Navigation({ setSearch, setNewData }) {
         (user.auth && user.auth !== undefined) ? logout() : navigate('/login')
     }
 
-    const handleSignup = () => {
+    const handleSignup = (event) => {
+        event.preventDefault()
         navigate('/signup')
     }
 
     const handleProfile = (event) => {
         event.preventDefault()
         navigate('/profile')
+    }
+
+    const handleCart = (event) => {
+        event.preventDefault()
+        navigate(`/cart`)
     }
 
     return (
@@ -80,6 +87,8 @@ function Navigation({ setSearch, setNewData }) {
                             </span>}
                         // id="basic-nav-dropdown"
                     >
+                        <NavDropdown.Item onClick={handleCart}>Cart</NavDropdown.Item>
+                        <NavDropdown.Divider />
                         <NavDropdown.Item onClick={handleProfile}>Profile</NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item onClick={handleLogin}>

@@ -1,6 +1,5 @@
 import axios from "axios"
-import { Success, Warning } from "../Utils/Notification"
-import AuthenToken from "../Utils/AuthenToken"
+import { Warning } from "../Utils/Notification"
 
 const instance = axios.create({
     baseURL: 'http://localhost:3000/',

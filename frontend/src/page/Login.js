@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
-import Validation from '../Utils/Validation'
 import AxiosNotAuthen from '../CustomineAxios/AxiosNotAuthen'
 import { Success, Warning } from '../Utils/Notification'
 import Debounce from '../Utils/Debounce'
@@ -20,12 +19,15 @@ function Login() {
 
     const convertObject = (object) => {
       let stringNotify = ''
+      if (object !== '') {
+        return object
+      }
       if (object.email === '') {
         stringNotify = object.password
       } else if (object.password === '') {
         stringNotify = object.email
       } else {
-        stringNotify = object.email + "\n" + object.password
+        stringNotify = object.email + object.password
       }
       return stringNotify
     }
@@ -44,12 +46,9 @@ function Login() {
     }
 
     const handleLogin = async () => {
-      console.log("Start login.")
-      const valid =  Validation(user)
-
-      if (valid.email === '' && valid.password === '') {
+      const userLogin = { email: user.email, password: user.password }
         try {
-          const res = await AxiosNotAuthen.post(`/login`, user, { 
+          const res = await AxiosNotAuthen.post(`/login`, userLogin, { 
               headers: {
                 'password': user.password
               }
@@ -62,15 +61,15 @@ function Login() {
               localStorage.setItem('refreshToken', JSON.stringify(res.refreshToken))
             }, 1500)
           } else {
-            Warning(res.message)
+            if (res.success) {
+              return Success(res.message)
+            }
+            const response = convertObject(res.message)
+            return Warning(response)
           }
         } catch (error) {
             console.log(error)
         }
-      } else {
-        const respond = convertObject(valid)
-        Warning(respond)
-      }
     }
 
   const debouncedLogin = Debounce(handleLogin, 500)

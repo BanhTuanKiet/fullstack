@@ -5,6 +5,7 @@ import Login from '../page/Login'
 import Signup from '../page/Signup'
 import NotFound from '../page/NotFound'
 import Profile from '../page/Profile'
+import Cart from '../page/Cart'
 
 function AppRoute() {
     return (
@@ -14,6 +15,7 @@ function AppRoute() {
                 <Route path='/login' element={<Login />} />
                 <Route path='/signup' element={<Signup />} />
                 <Route path='/profile' element={<Profile />} />
+                <Route path='/cart' element={<Cart />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </>

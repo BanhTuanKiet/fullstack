@@ -36,9 +36,12 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             return Warning("You must log in to continue.")
         }
         // deleteFavoriteItem
-
         if (shoe_name.includes(name)) {
-            await CustomineAxios.delete(`favorite?email=${user.email}&shoe=${name}`)
+            await CustomineAxios.delete(`/auth/favorite?email=${user.email}&shoe=${name}`, {
+                headers: {
+                    'Authorization': `${accessToken}`,
+                }
+            })
             .then(res => {
                 if (res.success) {
                     const updatedFavorites = favoritedItems.filter(item => item.shoe_name !== name)
@@ -50,7 +53,11 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             })
         // postFavoriteItem
         } else {
-            await CustomineAxios.post(`favorite`, { email: user.email, shoe: name })
+            await CustomineAxios.post(`/auth/favorite?email=${user.email}&shoe=${name}`, { refreshToken }, {
+                headers: {
+                    'Authorization': `${accessToken}`
+                }
+            })
             .then(res => {
                 if (res.success) {
                     setFavoritedItems(prevItems => [...prevItems, { shoe_name: name }])
@@ -63,11 +70,11 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
     }
     // purchaseItem
     const handleBuy = async () => {
-        if (user.email === '' || user.email === undefined) {
+        if (user.email === '') {
             return Warning("You must log in to continue!")
         }
         
-        await CustomineAxios.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, {refreshToken}, {
+        await CustomineAxios.put(`/auth/items/purchase?shoe_name=${name}&cus_email=${user.email}`, { refreshToken }, {
             headers: {
                 'Authorization': `${accessToken}`
             }
