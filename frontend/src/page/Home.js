@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import Navigation from '../Navigation/Navigation'
 import Products from '../Products/Products'
 import ModalItem from '../component/ModalItem'
-import CustomineAxios from '../CustomineAxios/Axios'
+import AxiosAuth from '../CustomineAxios/Axios'
 import AxiosNotAuthen from '../CustomineAxios/AxiosNotAuthen'
 import { UserContext } from '../Context/UseContext'
 import { Warning } from '../Utils/Notification'
@@ -54,7 +54,7 @@ function Home() {
       try {
         if (user.email !== '' && user.email !== undefined) {
           console.log("get favorite items")
-          const res = await CustomineAxios.get(`favorite/${user.email}`)
+          const res = await AxiosNotAuthen.get(`favorite/${user.email}`)
           if (res.success) {
             setFavoritedItems(res.data)        
           }
@@ -71,7 +71,7 @@ function Home() {
     const fetchData = setTimeout(async () => {
         if (search !== '') {
           console.log("get items")
-          await CustomineAxios.get(`items/${search}`)
+          await AxiosNotAuthen.get(`items/${search}`)
           .then(res => {
             if (res.success) {
               setNewData(res.data)
@@ -83,7 +83,7 @@ function Home() {
             console.log(err)
           })
         } else {
-          await CustomineAxios.get()
+          await AxiosNotAuthen.get()
           .then(res => {
             if (res.success) {
               setNewData(res.data)
@@ -93,7 +93,7 @@ function Home() {
             console.log(err)
           })
         }
-    }, 500)
+    }, 300)
     return () => clearTimeout(fetchData)
   }, [search])
 

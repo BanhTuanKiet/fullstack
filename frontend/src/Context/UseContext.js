@@ -30,9 +30,6 @@ const UserProvider = ({ children }) => {
     }
 
     const loginWithoutAcc = () => {
-        // const newUser = { email: '', password: '', auth: true}
-        // setUser(newUser)
-        // localStorage.removeItem('user')
         // navigate('/')
     }
 

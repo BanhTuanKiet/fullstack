@@ -1,6 +1,8 @@
 require('dotenv').config()
 const db = require('../Config/ConfigDb')
 const jwt = require('jsonwebtoken')
+
+const tokenSecret = process.env.TOKEN_SECRET
 let listItems = []
 
 const getItem = (req, res) => {
@@ -42,13 +44,11 @@ const login = (req, res) => {
 //step 2: save token localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
 //step 3: get token JSON.parse(localStorage.getItem('accessToken')) and use axios(url, data, CONFIG)
 //step 4: check Token authenToken()
-            // const accessTokenExpiry = Math.floor(Date.now() / 1000) + 60
-            // const refreshTokenExpiry = Math.floor(Date.now() / 1000) + 1800
             const accessToken = jwt.sign(
-                { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m'}
+                { email: email }, tokenSecret, { expiresIn: '1m'}
             )
             const refreshToken = jwt.sign(
-                { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2m'}
+                { email: email }, tokenSecret, { expiresIn: '2m'}
             )
 
             return res.json({ 
@@ -134,7 +134,6 @@ const getFavoriteItems = (req, res) => {
         return res.json({ success: false })
     })
 }
-
 
 const deleteFavoriteItem = (req, res) => {
     const { email, shoe } = req.query

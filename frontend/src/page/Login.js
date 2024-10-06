@@ -6,9 +6,9 @@ import { Success, Warning } from '../Utils/Notification'
 import Debounce from '../Utils/Debounce'
 
 function Login() {
-    const { user, setUser, login, loginWithoutAcc } = useContext(UserContext)
+    const { user, setUser, login } = useContext(UserContext)
     const [disabledBtn, setDisabledBtn] = useState(true)
-    const [checked, setChecked] = useState(false)
+    // const [checked, setChecked] = useState(false)
 
     useEffect(() => {
         setDisabledBtn((user.email !== '' && user.email !== undefined && user.password !== '' && user.password !== undefined) ? false : true)
@@ -40,11 +40,6 @@ function Login() {
       setUser({  ...user, password: event.target.value})
     }
 
-    const handleChecked = (event) => {
-      console.log(event.target.checked)
-      setChecked(event.target.checked)
-    }
-
     const handleLogin = async () => {
       const userLogin = { email: user.email, password: user.password }
         try {
@@ -72,12 +67,12 @@ function Login() {
         }
     }
 
-  const debouncedLogin = Debounce(handleLogin, 500)
+  const debouncedLogin = Debounce(handleLogin, 300)
 
   return (
     <Container fluid className="d-flex vh-100">
       <Row className="align-self-center w-100">
-        <Col lg={3} md={4} sm={6} xs={12} className="mx-auto">
+        <Col lg={4} md={5} sm={6} xs={12} className="mx-auto">
           <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Control 
@@ -99,10 +94,10 @@ function Login() {
               />
             </Form.Group>
             <Form.Group>
-              {/* <Form.Check type='checkbox' className='my-3'>
-                <Form.Check.Input type="checkbox" isValid checked={checked} onChange={handleChecked} />
-                <Form.Check.Label>Continue without log in.</Form.Check.Label>
-              </Form.Check> */}
+              <Form.Check type='checkbox' className='my-3'>
+                {/* <Form.Check.Input type="checkbox" isValid checked={} />
+                <Form.Check.Label>Continue without an account.</Form.Check.Label> */}
+              </Form.Check>
             </Form.Group>
             <div className='d-flex justify-content-center'>
                 <Button variant="outline-primary" onClick={debouncedLogin} disabled={disabledBtn}>

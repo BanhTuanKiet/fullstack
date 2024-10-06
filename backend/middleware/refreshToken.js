@@ -1,4 +1,7 @@
+require('dotenv').config()
 const jwt = require('jsonwebtoken')
+
+const tokenSecret = process.env.TOKEN_SECRET
 
 const refreshToken = (req, res, next) => {
     const authorizationClient = req.body.refreshToken
@@ -14,14 +17,14 @@ const refreshToken = (req, res, next) => {
 
     if (req.status === 401) {
         try {
-            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+            jwt.verify(token, tokenSecret)
             // Explanation token without validation.
             // jwt.decode(token, process.env.ACCESS_TOKEN_SECRET)
             const accessToken = jwt.sign(
-                { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m'}
+                { email: email }, tokenSecret, { expiresIn: '1m'}
             )
             const refreshToken = jwt.sign(
-                { email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2m'}
+                { email: email }, tokenSecret, { expiresIn: '2m'}
             )
             res.accessToken = accessToken
             res.refreshToken = refreshToken

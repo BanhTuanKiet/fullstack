@@ -1,10 +1,9 @@
 import React, { useContext } from 'react'
 import { Button, Card, CardBody, CardImg, CardText, CardTitle, Modal } from 'react-bootstrap'
 import { UserContext } from '../Context/UseContext'
-import CustomineAxios from '../CustomineAxios/Axios'
+import AxiosAuth from '../CustomineAxios/Axios'
 import './MadalItem.css'
 import { Success, Warning } from '../Utils/Notification'
-import AuthenToken from '../Utils/AuthenToken'
 
 function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, setFavoritedItems }) {
     const { user } = useContext(UserContext)
@@ -37,7 +36,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         }
         // deleteFavoriteItem
         if (shoe_name.includes(name)) {
-            await CustomineAxios.delete(`/auth/favorite?email=${user.email}&shoe=${name}`, {
+            await AxiosAuth.delete(`/auth/favorite?email=${user.email}&shoe=${name}`, {
                 headers: {
                     'Authorization': `${accessToken}`,
                 }
@@ -53,7 +52,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             })
         // postFavoriteItem
         } else {
-            await CustomineAxios.post(`/auth/favorite?email=${user.email}&shoe=${name}`, { refreshToken }, {
+            await AxiosAuth.post(`/auth/favorite?email=${user.email}&shoe=${name}`, { refreshToken }, {
                 headers: {
                     'Authorization': `${accessToken}`
                 }
@@ -74,7 +73,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             return Warning("You must log in to continue!")
         }
         
-        await CustomineAxios.put(`/auth/items/purchase?shoe_name=${name}&cus_email=${user.email}`, { refreshToken }, {
+        await AxiosAuth.put(`/auth/items/purchase?shoe_name=${name}&cus_email=${user.email}`, { refreshToken }, {
             headers: {
                 'Authorization': `${accessToken}`
             }
