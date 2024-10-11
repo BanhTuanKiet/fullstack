@@ -7,16 +7,13 @@ const encryptionPassword = (req, res, next) => {
     bcrypt.compare(password, hashedPassword, (err, isMatch) => {
         if (err) {
             console.error('Error comparing passwords:', err)
-            return res.status(500).json({ message: 'Internal Server Error.' })
+            return res.status(500).json({ success: false, message: 'Error occurred while comparing the password.' })
         }
 
         if (isMatch) {
-            // console.log("HasedPassword: ", hashedPassword)
-            // console.log("Password: ", password)
-            // console.log('Password is correct.')
             next()
         } else {
-            return res.json({ success: false, message: "Password is not correct!" }) 
+            return res.status(401).json({ success: false, message: "Password is not correct!" }) 
         }
     })
 }

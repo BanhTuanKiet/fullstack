@@ -1,7 +1,9 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const { router, routerB, routerAuth } = require('./Route/Routing')
+const { baseRoute } = require('./Route/BaseRoutes')
+const { loginRoute, verifyOTPRoute } = require('./Route/LoginRoutes')
+const { authRoute } = require('./Route/AuthRoutes')
 
 const port = process.env.PORT
 
@@ -9,10 +11,11 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.use('/', router)
-app.use('/login', routerB)
-app.use('/auth', routerAuth)
+app.use('/', baseRoute)
+app.use('/login', loginRoute)
+app.use('/login', verifyOTPRoute)
+app.use('/auth', authRoute)
 
 app.listen(port, () => {
-    console.log(`http://localhost:3000`)
+    console.log(`http://localhost:${port}`)
 })

@@ -27,6 +27,9 @@ const UserProvider = ({ children }) => {
         const newUser = { name: name, email: email, password: password, avatar: avatar, auth: true}
         setUser(newUser)
         navigate('/')
+        // setTimeout(() => {
+        //     setUser({ ...user, password: '' })
+        // }, 500)
     }
 
     const loginWithoutAcc = () => {

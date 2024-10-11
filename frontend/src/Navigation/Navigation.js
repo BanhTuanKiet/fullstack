@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Container, Nav, Navbar, NavDropdown, Image } from 'react-bootstrap'
-import CustomineAxios from '../CustomineAxios/Axios'
+import AxiosNotAuth from '../CustomineAxios/AxiosNotAuth'
 import { UserContext } from '../Context/UseContext'
 import { useNavigate } from 'react-router-dom'
 import '../Navigation/Navigation.css'
@@ -23,13 +23,13 @@ function Navigation({ setSearch, setNewData }) {
         try {
             if (curSelectedBrand === '') {
                 console.log("Fetching all data")
-                const res = await CustomineAxios.get()
+                const res = await AxiosNotAuth.get()
                 if (res.success) {
                     setNewData(res.data)
                 }
             } else {
                 console.log(`Fetching data for brand: ${curSelectedBrand}`)
-                const res = await CustomineAxios.get(`company/${curSelectedBrand}`)
+                const res = await AxiosNotAuth.get(`company/${curSelectedBrand}`)
                 if (res.success) {
                     setNewData(res.data)
                 }
