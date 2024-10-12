@@ -1,5 +1,6 @@
 const speakeasy = require('speakeasy')
 const db = require('../Config/ConfigDb')
+const nodemailer = require('nodemailer')
 
 const createOTP = async  (email) => {
     const orignalEmail = (email.replace(/"/g, ''))
@@ -22,7 +23,27 @@ const createOTP = async  (email) => {
         encoding: 'base32'
     })
     
-    console.log("OTP: ", token)
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'kiett5153@gmail.com',
+            pass: ''
+        }
+    })
+
+    const mailOptions = {
+        from: '',
+        to: '',
+        subjet: 'Your Account Verification Code',
+        text: 'wegwef'
+    }
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            console.log(err)
+        }
+        // console.log('Emai sent: ', info.response)
+    })
 
     const otp = {
         token: token,

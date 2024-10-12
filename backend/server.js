@@ -2,8 +2,9 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const { baseRoute } = require('./Route/BaseRoutes')
-const { loginRoute, verifyOTPRoute } = require('./Route/LoginRoutes')
+const { loginRoute } = require('./Route/LoginRoutes')
 const { authRoute } = require('./Route/AuthRoutes')
+const { verifyOTPRoute } = require('./Route/VerifyRoutes')
 
 const port = process.env.PORT
 

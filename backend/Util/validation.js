@@ -1,6 +1,6 @@
 const validation =  (req, res, next) => {
     const { name, email, password } = req.body
-    console.log(req.body)
+
     let errs = { name: '', email: '', password: '' }
 
     const name_pattern = /^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
@@ -26,7 +26,7 @@ const validation =  (req, res, next) => {
     } else if (!password_pattern.test(password)) {
         errs.password = 'Password does not match the required format.'
     }
-    console.log(errs)
+
     if (errs.name === '' && errs.email === '' && errs.password === '') {
         return next()
     }
