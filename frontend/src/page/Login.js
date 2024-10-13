@@ -58,7 +58,6 @@ function Login() {
                 'password': user.password
               }
           })
-    
           if (res.success) {
             setData(res)
           } else {
@@ -74,7 +73,6 @@ function Login() {
     try {
       const res = await AxiosNotAuth.post(`/login/verifyOTP`, { otp, email: user.email})
       if (res.success) {
-        console.log(data)
         Success(`Welcome ${data.data[0].name}`)
         localStorage.setItem('accessToken', JSON.stringify(data.accessToken))
         localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken))

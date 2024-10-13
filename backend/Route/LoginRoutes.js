@@ -3,12 +3,12 @@ const loginRoute = express.Router()
 
 const { getPassword, login } = require('../Controller/LoginController')
 const { signup } = require('../Controller/SignupController')
-const { encryptionPassword } = require('../middleware/encryption')
+const { AuthPassword } = require('../middleware/AuthPassword')
 const { validation } = require('../Util/validation')
 
 //login
 // loginRoute.use(validation)
-loginRoute.post('/', validation, getPassword, encryptionPassword, login)
+loginRoute.post('/', validation, getPassword, AuthPassword, login)
 loginRoute.post('/signup', validation, signup)
 
 module.exports = {

@@ -1,7 +1,7 @@
 const db = require('../Config/ConfigDb')
 const jwt = require('jsonwebtoken')
 const tokenSecret = process.env.TOKEN_SECRET
-const { createOTP } = require('../middleware/createOTP')
+const { GenerateOTP } = require('../middleware/GenerateOTP')
 
 const getPassword = (req, res, next) => {
     try {
@@ -24,13 +24,13 @@ const getPassword = (req, res, next) => {
     }
 }
 
-const login = async (req, res) => {
+const login = (req, res) => {
     try {
         const { email } = req.body
 
         const sql = "SELECT name, avatar FROM customer WHERE email = ?"
     
-        await db.query(sql, [email], (err, data) => {
+        db.query(sql, [email], (err, data) => {
             if (err) {
                 return res.status(500).json({ success: false, message: 'Internal Server Error.' })
             }
@@ -39,7 +39,7 @@ const login = async (req, res) => {
     //step 2: save token localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
     //step 3: get token JSON.parse(localStorage.getItem('accessToken')) and use axios(url, data, CONFIG)
     //step 4: check Token authenToken()
-                const token = createOTP(JSON.stringify(email))
+                const token = GenerateOTP(JSON.stringify(email))
 
                 const accessToken = jwt.sign(
                     { email: email }, tokenSecret, { expiresIn: '1m'}
@@ -51,7 +51,6 @@ const login = async (req, res) => {
                 return res.json({ 
                     success: true, message: 'Login successful.', data: data, 
                     accessToken: accessToken, refreshToken: refreshToken, 
-                    otp: token
                 })
             }
             return res.status(404).json({ success: false, message: 'Email not exist or password incorret.' })

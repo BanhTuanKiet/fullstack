@@ -2,7 +2,6 @@ const speakeasy = require('speakeasy')
 const db = require('../Config/ConfigDb')
 
 const verify2FA = async (req, res, next) => {
-    console.log("Dawdws")
     try {
         const { otp, email } = req.body
 

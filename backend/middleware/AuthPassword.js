@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 
-const encryptionPassword = (req, res, next) => {
+const AuthPassword = (req, res, next) => {
     const { password } = req.body
     const hashedPassword = req.hashedPassword
 
@@ -19,5 +19,5 @@ const encryptionPassword = (req, res, next) => {
 }
 
 module.exports = {
-    encryptionPassword
+    AuthPassword
 }
