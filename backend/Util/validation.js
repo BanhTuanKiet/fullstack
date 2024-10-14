@@ -1,6 +1,5 @@
 const validation =  (req, res, next) => {
     const { name, email, password } = req.body
-
     let errs = { name: '', email: '', password: '' }
 
     const name_pattern = /^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
@@ -30,8 +29,10 @@ const validation =  (req, res, next) => {
     if (errs.name === '' && errs.email === '' && errs.password === '') {
         return next()
     }
-    
+
     return res.json({ success: false, message: errs })
 }
 
-module.exports = { validation }
+module.exports = { 
+    validation 
+}

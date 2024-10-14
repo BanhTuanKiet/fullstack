@@ -1,5 +1,5 @@
 require('dotenv').config()
-const nodemailer = require('nodemon')
+const nodemailer = require('nodemailer')
 
 const SendEmail = (token) => {
     const transporter = nodemailer.createTransport({
@@ -23,9 +23,11 @@ const SendEmail = (token) => {
             [Company Name]`
     }
 
-    transporter.sendEmail(mailOptions, (err, info) => {
+    transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-            console.log(err)
+            console.log('Send mail error:', err)
+        } else {
+            // console.log('Email sent:', info.response)
         }
     })
 }

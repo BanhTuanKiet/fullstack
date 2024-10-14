@@ -74,7 +74,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         }
         console.log(name)
         
-        await AxiosAuth.put(`/auth/items/purchase?shoe_name=${name}&cus_email=${user.email}`, { refreshToken }, {
+        await AxiosAuth.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, { refreshToken }, {
             headers: {
                 'Authorization': `${accessToken}`
             }

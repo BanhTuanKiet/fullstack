@@ -1,15 +1,19 @@
 require('dotenv').config()
-const mysql = require('mysql')
+const mysql = require('mysql2/promise')
 
-const database = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
-})
+const connect = async () => {
+    try {
+        const database = await mysql.createConnection({
+            host: process.env.HOST,
+            user: process.env.USER,
+            password: process.env.PASSWORD,
+            database: process.env.DATABASE
+        })
+        console.log('Connected to MySQL database.')
+        return database
+    } catch (error) {
+        console.log(error)
+    }
+}
 
-database.connect((err) => {
-    err ? console.log('Error connecting to MySQL database: ', err , '.') : console.log('Connected to MySQL database.')
-})
-
-module.exports = database
+module.exports = connect

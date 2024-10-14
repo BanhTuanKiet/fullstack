@@ -1,5 +1,5 @@
 require('dotenv').config()
-const db = require('../Config/ConfigDb')
+const connect = require('../Config/ConfigDb')
 let listItems = []
 
 const getItem = (req, res) => {
@@ -12,7 +12,7 @@ const getItem = (req, res) => {
         }
 
         if (!listItems) {
-            return res.status(500).json({ success: false, message: "Internal server error. Items list not available." })
+            return res.status(500).json({ success: false, message: "Items list not available." })
         }
         const item = listItems.filter(i => i.id === parsedId)
         
@@ -23,22 +23,21 @@ const getItem = (req, res) => {
     } catch (error) {
         return res.status(500).json({ success: false, message: "An error occurred while fetching the items."})
     }
+    
 }
 
 const getListItem = async (req, res) => {
     const sql = "SELECT * FROM shoes"
+    const db = await connect()
 
     try {
-        await db.query(sql, (err, data) => {
-            if (err) {
-                return res.status(500).json({ success: false, message: 'Database error.' })
-            }
-            if (data.length > 0) {
-                listItems = data
-                return res.status(200).json({ success: true, message: 'Get items successful.', data: data })
-            }
-            return res.status(404).json({ success: false, message: 'No items found in database.' })
-        })
+        const [results, fields] = await db.query(sql)
+
+        if (results.length > 0) {
+            listItems = results
+            return res.status(200).json({ success: true, message: 'Get items successful.', data: results })
+        }
+        return res.status(404).json({ success: false, message: 'No items found in database.' })
     } catch (error) {
         return res.status(500).json({ success: false, message: "Database error."})
     }
