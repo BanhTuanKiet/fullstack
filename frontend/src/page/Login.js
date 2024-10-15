@@ -69,7 +69,8 @@ function Login() {
         }
     }
 
-  const verifyOTP = async () => {
+  const verifyOTP = async (event) => {
+    event.preventDefault()
     try {
       const res = await AxiosNotAuth.post(`/login/verifyOTP`, { otp, email: user.email})
       if (res.success) {

@@ -1,16 +1,15 @@
-const connect = require('../Config/ConfigDb')
+const database = require('../Config/ConfigDb')
 const jwt = require('jsonwebtoken')
 const tokenSecret = process.env.TOKEN_SECRET
 const { GenerateOTP } = require('../middleware/GenerateOTP')
 
 const getPassword = async (req, res, next) => {
-    const db = await connect()
     const sql = "SELECT encyptionPassword FROM customer WHERE email = ?"
 
     try {
         const { email } = req.body
 
-        const [results, fields] = await db.query(sql, [email])
+        const [results, fields] = await database.query(sql, [email])
 
         if (results.length > 0) {
             req.hashedPassword = results[0].encyptionPassword
@@ -23,13 +22,12 @@ const getPassword = async (req, res, next) => {
 }
 
 const login = async (req, res) => {
-    const db = await connect()
     const sql = "SELECT name, avatar FROM customer WHERE email = ?"
 
     try {
         const { email } = req.body
 
-        const [results, fields] = await db.query(sql, [email])
+        const [results, fields] = await database.query(sql, [email])
         
         if (results.length > 0) {
 //step 1: create token jwt.sign(PayLoad, Secret Key, Options)
@@ -39,7 +37,7 @@ const login = async (req, res) => {
             const stateVerify = GenerateOTP(JSON.stringify(email))
 
             if (!stateVerify) {
-                return res.status(500).json({ success: false, message: 'Error generating OTP. Please try again later.' })
+                return res.status(200).json({ success: false, message: 'Error generating OTP. Please try again later.' })
             }
 
             const accessToken = jwt.sign({ email: email }, tokenSecret, { expiresIn: '1m'})
@@ -49,7 +47,7 @@ const login = async (req, res) => {
                 success: true, message: 'Login successful.', data: results, accessToken: accessToken, refreshToken: refreshToken, 
             })
         }
-        return res.status(404).json({ success: false, message: 'Email not exist or password incorret.' })
+        return res.status(200).json({ success: false, message: 'Email not exist or password incorret.' })
     } catch (error) {
         console.log("Login error: ", error)
         return res.status(500).json({ success: false, message: 'An error occurred while login.' })

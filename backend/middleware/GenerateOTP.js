@@ -1,9 +1,8 @@
 const speakeasy = require('speakeasy')
 const { SendEmail } = require('./SendMail')
-const connect = require('../Config/ConfigDb')
+const database = require('../Config/ConfigDb')
 
 const GenerateOTP = async (email) => {
-    const db = await connect()
     const sql = `SELECT base32 FROM customer 
                 JOIN secret ON id_customer = id
                 WHERE email = ?`
@@ -12,7 +11,7 @@ const GenerateOTP = async (email) => {
     try {
         const orignalEmail = (email.replace(/"/g, ''))
 
-        const [results, fields] = await db.query(sql, [orignalEmail])
+        const [results, fields] = await database.query(sql, [orignalEmail])
 
         if (results.length === 0) {
             return res.status(500).json({ success: false, message: 'Email not found in the database.' })

@@ -10,7 +10,7 @@ const AuthPassword = async (req, res, next) => {
         if (isMatch) {
             return next()
         }
-        return res.status(401).json({ success: false, message: "Password is not correct!" }) 
+        return res.status(200).json({ success: false, message: "Password is not correct!" }) 
     } catch (error) {
         console.error('Error comparing passwords:', err)
         return res.status(500).json({ success: false, message: 'Error occurred while comparing the password.' })

@@ -1,15 +1,14 @@
 const speakeasy = require('speakeasy')
-const connect = require('../Config/ConfigDb')
+const database = require('../Config/ConfigDb')
 
 const verify2FA = async (req, res, next) => {
-    const db = await connect()
     const sql = `SELECT base32 FROM secret
                WHERE id_customer = (SELECT id FROM customer WHERE Email = ?)`
     let secret
     const { otp, email } = req.body
     try {
 
-        const results = await db.query(sql, [email])
+        const results = await database.query(sql, [email])
 
         if (results.length === 0) {
             return res.status(404).json({ success: false, message: 'Email not found.' })
@@ -30,9 +29,9 @@ const verify2FA = async (req, res, next) => {
     })
 
     if (verified) {
-        res.json({ success: true, message: "2FA verification successful" })
+        res.status(200).json({ success: true, message: "2FA verification successful" })
     } else {
-        res.json({ success: false, message: "Invalid 2FA token" })
+        res.status(200).json({ success: false, message: "Invalid 2FA token" })
     }
 }
 
