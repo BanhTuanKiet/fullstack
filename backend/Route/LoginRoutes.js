@@ -8,7 +8,7 @@ const { validation } = require('../Util/validation')
 
 //login
 // loginRoute.use(validation)
-loginRoute.post('/', getPassword, AuthPassword, login)
+loginRoute.post('/', login)
 loginRoute.post('/signup', signup)
 
 module.exports = {

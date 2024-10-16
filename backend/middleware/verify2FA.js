@@ -1,5 +1,7 @@
 const speakeasy = require('speakeasy')
 const database = require('../Config/ConfigDb')
+const Customer = require('../Model/Customer')
+const SecretKey = require('../Model/SecretKey')
 
 const verify2FA = async (req, res, next) => {
     const sql = `SELECT base32 FROM secret
@@ -8,13 +10,18 @@ const verify2FA = async (req, res, next) => {
     const { otp, email } = req.body
     try {
 
-        const results = await database.query(sql, [email])
+        const result = await Customer.findOne({
+            where: {
+                email: email
+            },
+            include: [{
+                model: SecretKey,
+                attributes: ['base32']
+            }],
+            // attributes: [] // no need to select other fields from customer
+        })
 
-        if (results.length === 0) {
-            return res.status(404).json({ success: false, message: 'Email not found.' })
-        }
-
-        secret = results[0][0].base32
+        secret = result.Secret.base32
 
     } catch (error) {
         console.error("Verify OTP error:", error)

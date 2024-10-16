@@ -58,6 +58,7 @@ function Login() {
                 'password': user.password
               }
           })
+          console.log(res)
           if (res.success) {
             setData(res)
           } else {
@@ -74,11 +75,11 @@ function Login() {
     try {
       const res = await AxiosNotAuth.post(`/login/verifyOTP`, { otp, email: user.email})
       if (res.success) {
-        Success(`Welcome ${data.data[0].name}`)
+        Success(`Welcome ${data.data.name}`)
         localStorage.setItem('accessToken', JSON.stringify(data.accessToken))
         localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken))
         setTimeout(() => {
-          login(data.data[0].name, user.email, user.password, data.data[0].avatar)
+          login(data.data.name, user.email, user.password, data.data.avatar)
         }, 1500)
       } else {
         Warning(res.message)
@@ -88,7 +89,7 @@ function Login() {
     }
   }
 
-  const debouncedLogin = Debounce(handleLogin, 300)
+  // const debouncedLogin = Debounce(handleLogin, 300)
 
   return (
     <Container fluid className="d-flex vh-100">
@@ -120,7 +121,7 @@ function Login() {
                 </Form.Check>
               </Form.Group>
               <div className='d-flex justify-content-center'>
-                  <Button variant="outline-primary" onClick={debouncedLogin} disabled={disabledBtn}>
+                  <Button variant="outline-primary" onClick={handleLogin} disabled={disabledBtn}>
                     Log in
                   </Button>
               </div>

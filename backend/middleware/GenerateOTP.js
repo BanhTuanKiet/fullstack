@@ -1,24 +1,28 @@
 const speakeasy = require('speakeasy')
 const { SendEmail } = require('./SendMail')
 const database = require('../Config/ConfigDb')
+const Customer = require('../Model/Customer')
+const SecretKey = require('../Model/SecretKey')
+const { where } = require('sequelize')
 
 const GenerateOTP = async (email) => {
-    const sql = `SELECT base32 FROM customer 
-                JOIN secret ON id_customer = id
-                WHERE email = ?`
     let secret
 
     try {
         const orignalEmail = (email.replace(/"/g, ''))
 
-        const [results, fields] = await database.query(sql, [orignalEmail])
-
-        if (results.length === 0) {
-            return res.status(500).json({ success: false, message: 'Email not found in the database.' })
-        }
-
-        secret = results[0].base32
-
+        const result = await Customer.findOne({
+            where: {
+                email: orignalEmail
+            },
+            include: [{
+                model: SecretKey,
+                attributes: ['base32']
+            }],
+            // attributes: [] // no need to select other fields from customer
+        })
+        console.log("res: ", result.Secret.base32)
+        secret = result.Secret.base32
     } catch (error) {
         console.log('Generate OTP error: ', error)
         return false
@@ -29,7 +33,7 @@ const GenerateOTP = async (email) => {
         encoding: 'base32'
     })
 
-    console.log("Generate: ", secret)
+    console.log("Get secret key: ", secret)
     console.log("Generate OTP: ", token)
 
     SendEmail(token)

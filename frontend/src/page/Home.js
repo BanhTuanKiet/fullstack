@@ -7,6 +7,7 @@ import { UserContext } from '../Context/UseContext'
 import { Warning } from '../Utils/Notification'
 
 function Home() {
+  const [block, setBlock] = useState(true)
   const [newData, setNewData] = useState([])
   const [search, setSearch] = useState('')
   const [show, setShow] = useState(false)
@@ -67,6 +68,7 @@ function Home() {
     //search Items
     const fetchData = setTimeout(async () => {
         if (search !== '') {
+          setBlock(false)
           console.log("get items")
           await AxiosNotAuth.get(`items/${search}`)
           .then(res => {
@@ -80,15 +82,17 @@ function Home() {
             console.log(err)
           })
         } else {
-          await AxiosNotAuth.get()
-          .then(res => {
-            if (res.success) {
-              setNewData(res.data)
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
+          if (!block) {
+            await AxiosNotAuth.get()
+            .then(res => {
+              if (res.success) {
+                setNewData(res.data)
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            })
+          }
         }
     }, 300)
     return () => clearTimeout(fetchData)
