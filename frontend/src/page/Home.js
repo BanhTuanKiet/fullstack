@@ -50,7 +50,7 @@ function Home() {
     //getFavoriteItems
     const fetchData = async () => {
       try {
-        if (user.email !== '' && user.email !== undefined) {
+        if (user.email !== '') {
           console.log("get favorite items")
           const res = await AxiosNotAuth.get(`favorite/${user.email}`)
           if (res.success) {

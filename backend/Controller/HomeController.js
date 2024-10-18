@@ -1,5 +1,6 @@
 require('dotenv').config()
-const database = require('../Config/ConfigDb')
+// const database = require('../Config/ConfigDb')
+const Shoe = require('../Model/Shoe')
 let listItems = []
 
 const getItem = (req, res) => {
@@ -28,17 +29,21 @@ const getItem = (req, res) => {
 
 const getListItem = async (req, res) => {
     console.time("Time excute: ")
-    const sql = "SELECT * FROM shoes"
 
     try {
-        const [results, fields] = await database.query(sql)
+        const results = await Shoe.findAll({
+            attributes: ['id', 'name', 'star', 'price', 'company', 'color', 'category', 'quantity', 'img']
+        })
 
         if (results.length > 0) {
-            listItems = results
             console.timeEnd("Time excute: ")
+            listItems = results
             return res.status(200).json({ success: true, message: 'Get items successful.', data: results })
         }
+
+        console.timeEnd("Time excute: ")
         return res.status(200).json({ success: false, message: 'No items found in database.' })
+    
     } catch (error) {
         console.log("get list items: ", error)
         return res.status(500).json({ success: false, message: "Database error."})

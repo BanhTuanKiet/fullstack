@@ -25,7 +25,6 @@ const getPassword = async (req, res, next) => {
 
 const login = async (req, res) => {
     const { email } = req.body
-    // const sql = "SELECT name, avatar FROM customer WHERE email = ?"
 
     try {
         const result = await Customer.findOne({
@@ -34,7 +33,7 @@ const login = async (req, res) => {
             },
             attributes: ['name', 'avatar'] 
         })
-        console.log(result.dataValues)
+
         if (result) {
 // //step 1: create token jwt.sign(PayLoad, Secret Key, Options)
 // //step 2: save token localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
@@ -50,7 +49,7 @@ const login = async (req, res) => {
             const refreshToken = jwt.sign({ email: email }, tokenSecret, { expiresIn: '2m'})
 
             return res.json({ 
-                success: true, message: 'Login successful.', data: result.dataValues, accessToken: accessToken, refreshToken: refreshToken, 
+                success: true, message: 'Login successful.', data: result, accessToken: accessToken, refreshToken: refreshToken, 
             })
         }  
         

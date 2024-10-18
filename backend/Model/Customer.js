@@ -56,4 +56,12 @@ Customer.hasOne(require('./SecretKey'), {
     foreignKey: 'id_Customer' 
 })
 
+Customer.hasMany(require('./FavoritedItem', {
+    foreignKey: 'cus_id'
+}))
+
+// Customer.hasOne(require('./Transaction', {
+//     foreignKey: 'cus_email'
+// }))
+
 module.exports = Customer

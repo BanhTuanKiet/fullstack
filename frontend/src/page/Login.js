@@ -58,7 +58,6 @@ function Login() {
                 'password': user.password
               }
           })
-          console.log(res)
           if (res.success) {
             setData(res)
           } else {

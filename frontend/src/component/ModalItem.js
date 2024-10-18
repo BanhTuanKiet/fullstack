@@ -11,10 +11,10 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
     const accessToken = JSON.parse(localStorage.getItem('accessToken'))
     const refreshToken = JSON.parse(localStorage.getItem('refreshToken'))
 
-    let shoe_name = []
+    let shoe_id = []
     if (user.email !== '') {
-        shoe_name = favoritedItems.map((item) => {
-            return item.shoe_name
+        shoe_id = favoritedItems.map((item) => {
+            return item.shoe_id
         })
     }
 
@@ -35,15 +35,15 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             return Warning("You must log in to continue.")
         }
         // deleteFavoriteItem
-        if (shoe_name.includes(name)) {
-            await AxiosAuth.delete(`/favorite?email=${user.email}&shoe=${name}`, {
+        if (shoe_id.includes(name)) {
+            await AxiosAuth.delete(`/favorite?email=${user.email}&shoe=${id}`, {
                 headers: {
                     'Authorization': `${accessToken}`,
                 }
             })
             .then(res => {
                 if (res.success) {
-                    const updatedFavorites = favoritedItems.filter(item => item.shoe_name !== name)
+                    const updatedFavorites = favoritedItems.filter(item => item.shoe_id !== name)
                     setFavoritedItems(updatedFavorites)
                 }
             })
@@ -52,14 +52,14 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             })
         // postFavoriteItem
         } else {
-            await AxiosAuth.post(`/favorite?email=${user.email}&shoe=${name}`, { refreshToken }, {
+            await AxiosAuth.post(`/favorite?email=${user.email}&shoe=${id}`, { refreshToken }, {
                 headers: {
                     'Authorization': `${accessToken}`
                 }
             })
             .then(res => {
                 if (res.success) {
-                    setFavoritedItems(prevItems => [...prevItems, { shoe_name: name }])
+                    setFavoritedItems(prevItems => [...prevItems, { shoe_id: id }])
                 }
             })
             .catch(err => {
@@ -131,7 +131,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
                     <i className="fa-solid fa-arrow-right" onClick={handleNext} />
                 </div>
                 <div className='d-flex justify-content-between' style={{ width: '48%' }}>
-                    {shoe_name.includes(name) ? <Button onClick={handleCart}>Added to cart</Button> : <Button onClick={handleCart} variant='white' className='btn-outline-primary'>Add to cart</Button>}
+                    {shoe_id.includes(id) ? <Button onClick={handleCart}>Added to cart</Button> : <Button onClick={handleCart} variant='white' className='btn-outline-primary'>Add to cart</Button>}
                     <Button variant='white' className="btn-outline-primary" onClick={handleBuy}>Buy Now</Button>
                 </div>
             </Modal.Footer>

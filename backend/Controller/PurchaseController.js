@@ -16,17 +16,16 @@ const purchaseItem = async (req, res) => {
         const [resultsInsert, fieldsInsert] = await db.query(insertTransactionSql, [cus_email, shoe_name])
 
         if (resultsInsert.affectedRows > 0) {
-
+            await database.query(updateQuantitySql, [shoe_name], (errUpdateData, updateData) => {
+                if (errUpdateData) {
+                    return res.status(500).json({ success: false, message: "Error updating shoe quantity." })
+                }
+                if (updateData.affectedRows > 0) {
+                    return res.status(200).json({ success: true, message: "Purchase successful.", accessToken: req.accessToken,  refreshToken: req.refreshToken })
+                }
+            })
         }
 
-        await database.query(updateQuantitySql, [shoe_name], (errUpdateData, updateData) => {
-            if (errUpdateData) {
-                return res.status(500).json({ success: false, message: "Error updating shoe quantity." })
-            }
-            if (updateData.affectedRows > 0) {
-                return res.status(200).json({ success: true, message: "Purchase successful.", accessToken: req.accessToken,  refreshToken: req.refreshToken })
-            }
-        })
     } catch (error) {
         return res.status(500).json({ success: false, message: "An error occurred while purchasing the item."})
     }
