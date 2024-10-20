@@ -10,14 +10,14 @@ const attributes = {
         primaryKey: true,
         autoIncrement: true
     },
-    cus_email: {
-        field: 'cus_email',
-        type: Sequelize.STRING,
+    cus_id: {
+        field: 'cus_id',
+        type: Sequelize.INTEGER,
         allowNull: false
     },
-    shoe_name: {
-        field: 'shoe_name',
-        type: Sequelize.STRING,
+    shoe_id: {
+        field: 'shoe_id',
+        type: Sequelize.INTEGER,
         allowNull: false
     }
 }
@@ -28,13 +28,13 @@ const options = {
         fields: ['id']
     }],
     sequelize,
-    modelName: 'Transaction',
-    tableName: 'transaction',
+    modelName: 'Order',
+    tableName: 'orders',
     timestamps: false
 }
 
-class Transaction extends Sequelize.Model {}
+class Order extends Sequelize.Model {}
 
-Transaction.init(attributes, options)
+Order.init(attributes, options)
 
-module.exports = Transaction
+module.exports = Order

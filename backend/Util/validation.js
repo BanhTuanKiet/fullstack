@@ -1,8 +1,8 @@
-const validation =  (req, res, next) => {
+const validation = (req, res, next) => {
     const { name, email, password } = req.body
     let errs = { name: '', email: '', password: '' }
 
-    const name_pattern = /^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
+    const name_pattern = /^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z]{8,}$/
     const email_pattern = /^[^\s@]+@reqres.in$/
     const password_pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/
 

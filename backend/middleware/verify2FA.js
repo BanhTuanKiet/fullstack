@@ -1,11 +1,8 @@
 const speakeasy = require('speakeasy')
-const database = require('../Config/ConfigDb')
 const Customer = require('../Model/Customer')
 const SecretKey = require('../Model/SecretKey')
 
 const verify2FA = async (req, res, next) => {
-    const sql = `SELECT base32 FROM secret
-               WHERE id_customer = (SELECT id FROM customer WHERE Email = ?)`
     let secret
     const { otp, email } = req.body
     try {

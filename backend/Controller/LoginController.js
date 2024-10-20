@@ -1,4 +1,3 @@
-const database = require('../Config/ConfigDb')
 const jwt = require('jsonwebtoken')
 const tokenSecret = process.env.TOKEN_SECRET
 const { GenerateOTP } = require('../middleware/GenerateOTP')
@@ -6,17 +5,22 @@ const Customer = require('../Model/Customer')
 const { where } = require('sequelize')
 
 const getPassword = async (req, res, next) => {
-    const sql = "SELECT encyptionPassword FROM customer WHERE email = ?"
-
+    // const sql = "SELECT encyptionPassword FROM customer WHERE email = ?"
+    const { email } = req.body
+    
     try {
-        const { email } = req.body
+        const result = await Customer.findOne({
+            where: { email: email },
+            attributes: ['encyptionPassword']
+        })
 
-        const [results, fields] = await database.query(sql, [email])
-
-        if (results.length > 0) {
-            req.hashedPassword = results[0].encyptionPassword
-            return next()
+        if (!result) {
+            return res.status(200).json({ success: false, message: 'User not found.' })
         }
+
+        req.hashedPassword = result.encyptionPassword
+        return next()
+
     } catch (error) {
         console.log("Get password error: ", error)
         return res.status(500).json({ success: false, message: 'An error occurred while getting password.' })

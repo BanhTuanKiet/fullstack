@@ -39,4 +39,6 @@ FavoritedItem.init(attributes, options)
 
 // FavoritedItem.belongsTo(require('./Customer'), { foreignKey: 'cus_id' })
 
+// FavoritedItem.belongsTo(require('./Shoe', { foreignKey: 'shoe_id'}))
+
 module.exports = FavoritedItem

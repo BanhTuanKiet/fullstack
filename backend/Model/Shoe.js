@@ -70,8 +70,8 @@ Shoe.hasMany(require('./FavoritedItem', {
     foreignKey: 'shoe_id',
 }))
 
-// Shoe.hasOne(require('./Transaction', {
-//     foreignKey: 'shoe_name'
-// }))
+Shoe.hasMany(require('./Order', {
+    foreignKey: 'shoe_id'
+}))
 
 module.exports = Shoe

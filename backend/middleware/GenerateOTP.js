@@ -1,6 +1,5 @@
 const speakeasy = require('speakeasy')
 const { SendEmail } = require('./SendMail')
-const database = require('../Config/ConfigDb')
 const Customer = require('../Model/Customer')
 const SecretKey = require('../Model/SecretKey')
 const { where } = require('sequelize')
@@ -21,7 +20,7 @@ const GenerateOTP = async (email) => {
             }],
             // attributes: [] // no need to select other fields from customer
         })
-        console.log("res: ", result.Secret.base32)
+
         secret = result.Secret.base32
     } catch (error) {
         console.log('Generate OTP error: ', error)
@@ -33,7 +32,6 @@ const GenerateOTP = async (email) => {
         encoding: 'base32'
     })
 
-    console.log("Get secret key: ", secret)
     console.log("Generate OTP: ", token)
 
     SendEmail(token)

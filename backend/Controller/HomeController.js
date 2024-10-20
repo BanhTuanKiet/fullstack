@@ -1,5 +1,4 @@
 require('dotenv').config()
-// const database = require('../Config/ConfigDb')
 const Shoe = require('../Model/Shoe')
 let listItems = []
 

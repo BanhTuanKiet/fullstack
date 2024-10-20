@@ -35,15 +35,17 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             return Warning("You must log in to continue.")
         }
         // deleteFavoriteItem
-        if (shoe_id.includes(name)) {
-            await AxiosAuth.delete(`/favorite?email=${user.email}&shoe=${id}`, {
+        console.log("Do something with item")
+        console.log(user.email, id)
+        if (shoe_id.includes(id)) {
+            await AxiosAuth.delete(`/favorite?email=${user.email}&shoe_id=${id}`, {
                 headers: {
                     'Authorization': `${accessToken}`,
                 }
             })
             .then(res => {
                 if (res.success) {
-                    const updatedFavorites = favoritedItems.filter(item => item.shoe_id !== name)
+                    const updatedFavorites = favoritedItems.filter(item => item.shoe_id !== id)
                     setFavoritedItems(updatedFavorites)
                 }
             })
@@ -52,7 +54,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             })
         // postFavoriteItem
         } else {
-            await AxiosAuth.post(`/favorite?email=${user.email}&shoe=${id}`, { refreshToken }, {
+            await AxiosAuth.post(`/favorite?email=${user.email}&shoe_id=${id}`, { refreshToken }, {
                 headers: {
                     'Authorization': `${accessToken}`
                 }
@@ -74,7 +76,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         }
         console.log(name)
         
-        await AxiosAuth.put(`/items/purchase?shoe_name=${name}&cus_email=${user.email}`, { refreshToken }, {
+        await AxiosAuth.put(`/items/purchase?shoe_id=${id}&cus_email=${user.email}`, { refreshToken }, {
             headers: {
                 'Authorization': `${accessToken}`
             }

@@ -113,12 +113,6 @@ function Login() {
                   onChange={handlePassword}
                 />
               </Form.Group>
-              <Form.Group>
-                <Form.Check type='checkbox' className='my-3'>
-                  {/* <Form.Check.Input type="checkbox" isValid checked={} />
-                  <Form.Check.Label>Continue without an account.</Form.Check.Label> */}
-                </Form.Check>
-              </Form.Group>
               <div className='d-flex justify-content-center'>
                   <Button variant="outline-primary" onClick={handleLogin} disabled={disabledBtn}>
                     Log in

@@ -1,27 +1,36 @@
-const database = require('../Config/ConfigDb')
+const { where } = require('sequelize')
+const Customer = require('../Model/Customer')
 
 const signup = async (req, res) => {
-    const checkEmailSql = "SELECT * FROM customer WHERE email = ?"
-    const insertSql = "INSERT INTO customer (`email`, `name`, `password`) VALUES (?, ?, ?)"
+    const { name, email, password } = req.body
+    console.log(req.body)
+    console.log(req.hashedPassword)
 
     try {
-        const { name, email, password } = req.body
+        const resultsSelect = await Customer.findOne({
+            where: { email: email },
+            attributes: ['id']
+        })
 
-        const [resultsSelect, fieldsSelect] = await database.query(checkEmailSql, [email])
-
-        if (resultsSelect > 0) {
+        if (resultsSelect) {
             return res.status(200).json({ success: false, message: 'Email exist.' })
         }
 
-        const [resultsInsert, fieldsInsert] = await database.query(insertSql, [email, name, password])
+        const resultsInsert = await Customer.create({
+            email: email,
+            name: name,
+            password: password,
+            encyptionPassword: req.hashedPassword
+        })
 
-        if (resultsInsert.affectedRows) {
+        if (resultsInsert) {
             return res.status(200).json({ success: true, message: 'Sign up successfully.' })
         }
 
         return res.status(200).json({ success: true, message: 'Sign up unsuccessfully. Please try again.' })
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ success: false, message: "An error occurred while signuping."})
     }
 }

@@ -23,7 +23,7 @@ const attributes = {
     avatar: {
         field: 'avatar',
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
     },
     password: {
         field: 'password',
@@ -60,8 +60,8 @@ Customer.hasMany(require('./FavoritedItem', {
     foreignKey: 'cus_id'
 }))
 
-// Customer.hasOne(require('./Transaction', {
-//     foreignKey: 'cus_email'
-// }))
+Customer.hasMany(require('./Order', {
+    foreignKey: 'cus_id'
+}))
 
 module.exports = Customer

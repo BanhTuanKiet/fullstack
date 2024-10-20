@@ -7,8 +7,6 @@ const accessToken = (req, res, next) => {
     const authorizationClient = req.headers['authorization']
     const token = authorizationClient && authorizationClient
 
-    console.log("Auth token")
-
     if (!token)
         return res.sendStatus(401)
 
