@@ -1,6 +1,5 @@
 require('dotenv').config()
-const Shoe = require('../Model/Shoe')
-let listItems = []
+const { getAllShoes, getShoeById, getShoesByName, getShoesByCompany } = require('../Service/ShoeService')
 
 const getItem = (req, res) => {
     try {
@@ -11,15 +10,18 @@ const getItem = (req, res) => {
             return res.status(200).json({ success: false, message: "Invalid item ID." })
         }
 
-        if (!listItems) {
+        const item = getShoeById(parsedId)
+
+        if (!item) {
             return res.status(200).json({ success: false, message: "Items list not available." })
         }
-        const item = listItems.filter(i => i.id === parsedId)
         
         if (item) {
             return res.status(200).json({ success: true, message: "Get items.", data: item })
         }
+
         return res.status(200).json({ success:false, message: `No items found with ID: ${parsedId}.` })
+    
     } catch (error) {
         return res.status(500).json({ success: false, message: "An error occurred while fetching the items."})
     }
@@ -30,13 +32,10 @@ const getListItem = async (req, res) => {
     console.time("Time excute: ")
 
     try {
-        const results = await Shoe.findAll({
-            attributes: ['id', 'name', 'star', 'price', 'company', 'color', 'category', 'quantity', 'img']
-        })
+        const results = await getAllShoes()
 
-        if (results.length > 0) {
+        if (results) {
             console.timeEnd("Time excute: ")
-            listItems = results
             return res.status(200).json({ success: true, message: 'Get items successful.', data: results })
         }
 
@@ -51,13 +50,13 @@ const getListItem = async (req, res) => {
 
 const getItems = (req, res) => {
     try {
-        const { items } = req.params
+        const { shoe_name } = req.params
 
-        if (!listItems) {
+        const arrItems =  getShoesByName(shoe_name)
+
+        if (!arrItems) {
             return res.status(500).json({ success: false, message: "Internal server error. Items list not available." })
         }
-
-        const arrItems = listItems.filter(item => item.name.toLowerCase().includes(items.toLowerCase().trim()))
 
         if (arrItems.length > 0) {
             return res.status(200).json({ success: true, message: 'Get items successful.', data: arrItems })
@@ -71,23 +70,21 @@ const getItems = (req, res) => {
 }
 
 const getItemsByCompany = (req, res) => {
-    // console.time("Time excute: ")
     try {
         const { company } = req.params
 
-        if (!listItems) {
-            // console.timeEnd("Time excute: ")
+        const arrItems = getShoesByCompany(company)
+
+        if (!arrItems) {
             return res.status(500).json({ success: false, message: "Internal server error. Items list not available." })
         }
-
-        const arrItems = listItems.filter(item => item.company === company)
     
         if (arrItems.length > 0) {
-            // console.timeEnd("Time excute: ")
             return res.status(200).json({ success: true, message: `Get shoes with company = ${company}`, data: arrItems })
         }
-        // console.timeEnd("Time excute: ")
+
         return res.status(200).json({ success: false, message: `No itmes found with company: ${company}.` })
+
     } catch (error) {
         return res.status(500).json({ success: false, message: "An error occurred while fetching the items."})
     }

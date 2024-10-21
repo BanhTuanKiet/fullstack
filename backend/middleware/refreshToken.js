@@ -6,7 +6,7 @@ const tokenSecret = process.env.TOKEN_SECRET
 const refreshToken = (req, res, next) => {
     const authorizationClient = req.body.refreshToken
     const token = authorizationClient && authorizationClient
-    const { email } = req.query
+    // const { email } = req.email
 
     if (!token)
         return res.sendStatus(401)
@@ -17,15 +17,16 @@ const refreshToken = (req, res, next) => {
 
     if (req.status === 401) {
         try {
-            jwt.verify(token, tokenSecret)
+            const decoded = jwt.verify(token, tokenSecret)
             // Explanation token without validation.
             // jwt.decode(token, process.env.ACCESS_TOKEN_SECRET)
             const accessToken = jwt.sign(
-                { email: email }, tokenSecret, { expiresIn: '1m'}
+                { email: req.email }, tokenSecret, { expiresIn: '5m'}
             )
             const refreshToken = jwt.sign(
-                { email: email }, tokenSecret, { expiresIn: '2m'}
+                { email: req.email }, tokenSecret, { expiresIn: '30m'}
             )
+            req.email = decoded.email
             res.accessToken = accessToken
             res.refreshToken = refreshToken
             next()

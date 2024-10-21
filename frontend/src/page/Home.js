@@ -3,6 +3,7 @@ import Navigation from '../Navigation/Navigation'
 import Products from '../Products/Products'
 import ModalItem from '../component/ModalItem'
 import AxiosNotAuth from '../CustomineAxios/AxiosNotAuth'
+import AxiosAuth from '../CustomineAxios/Axios'
 import { UserContext } from '../Context/UseContext'
 import { Warning } from '../Utils/Notification'
 
@@ -15,6 +16,8 @@ function Home() {
   const [selectedItem, setSelectedItem] = useState({})
   const [favoritedItems, setFavoritedItems] = useState([])
   const { user } = useContext(UserContext)
+  const accessToken = JSON.parse(localStorage.getItem('accessToken'))
+  const refreshToken = JSON.parse(localStorage.getItem('refreshToken'))
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +55,11 @@ function Home() {
       try {
         if (user.email !== '') {
           console.log("get favorite items")
-          const res = await AxiosNotAuth.get(`favorite/${user.email}`)
+          const res = await AxiosAuth.get(`/favorite`, {
+            headers: {
+              'Authorization': `${accessToken}`
+          }
+          })
           if (res.success) {
             setFavoritedItems(res.data)        
           }

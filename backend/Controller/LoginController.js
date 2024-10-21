@@ -1,18 +1,12 @@
 const jwt = require('jsonwebtoken')
-const tokenSecret = process.env.TOKEN_SECRET
 const { GenerateOTP } = require('../middleware/GenerateOTP')
-const Customer = require('../Model/Customer')
-const { where } = require('sequelize')
+const { findEnPassCusByEmail, findIn4CusByEmail } = require('../Service/CustomerService')
 
 const getPassword = async (req, res, next) => {
-    // const sql = "SELECT encyptionPassword FROM customer WHERE email = ?"
     const { email } = req.body
     
     try {
-        const result = await Customer.findOne({
-            where: { email: email },
-            attributes: ['encyptionPassword']
-        })
+        const result = await findEnPassCusByEmail(email)
 
         if (!result) {
             return res.status(200).json({ success: false, message: 'User not found.' })
@@ -31,26 +25,20 @@ const login = async (req, res) => {
     const { email } = req.body
 
     try {
-        const result = await Customer.findOne({
-            where: {
-                email: email
-            },
-            attributes: ['name', 'avatar'] 
-        })
+        const result = await findIn4CusByEmail(email)
 
         if (result) {
-// //step 1: create token jwt.sign(PayLoad, Secret Key, Options)
-// //step 2: save token localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
-// //step 3: get token JSON.parse(localStorage.getItem('accessToken')) and use axios(url, data, CONFIG)
-// //step 4: check Token authenToken()
             const stateVerify = GenerateOTP(JSON.stringify(email))
 
             if (!stateVerify) {
                 return res.status(200).json({ success: false, message: 'Error generating OTP. Please try again later.' })
             }
-
-            const accessToken = jwt.sign({ email: email }, tokenSecret, { expiresIn: '1m'})
-            const refreshToken = jwt.sign({ email: email }, tokenSecret, { expiresIn: '2m'})
+// //step 1: create token jwt.sign(PayLoad, Secret Key, Options)
+// //step 2: save token localStorage.setItem('accessToken', JSON.stringify(res.accessToken))
+// //step 3: get token JSON.parse(localStorage.getItem('accessToken')) and use axios(url, data, CONFIG)
+// //step 4: check Token authenToken()
+            const accessToken = jwt.sign({ email: email }, process.env.TOKEN_SECRET, { expiresIn: '5m'})
+            const refreshToken = jwt.sign({ email: email }, process.env.TOKEN_SECRET, { expiresIn: '30m'})
 
             return res.json({ 
                 success: true, message: 'Login successful.', data: result, accessToken: accessToken, refreshToken: refreshToken, 

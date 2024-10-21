@@ -1,27 +1,17 @@
-const { where } = require('sequelize')
-const Customer = require('../Model/Customer')
+const { findIdCusByEmail, createCustomer } = require('../Service/CustomerService')
 
 const signup = async (req, res) => {
     const { name, email, password } = req.body
-    console.log(req.body)
-    console.log(req.hashedPassword)
+    const hashedPassword = req.hashedPassword
 
     try {
-        const resultsSelect = await Customer.findOne({
-            where: { email: email },
-            attributes: ['id']
-        })
+        const resultsSelect = await findIdCusByEmail(email)
 
         if (resultsSelect) {
             return res.status(200).json({ success: false, message: 'Email exist.' })
         }
 
-        const resultsInsert = await Customer.create({
-            email: email,
-            name: name,
-            password: password,
-            encyptionPassword: req.hashedPassword
-        })
+        const resultsInsert = await createCustomer(email, name, password, hashedPassword)
 
         if (resultsInsert) {
             return res.status(200).json({ success: true, message: 'Sign up successfully.' })
