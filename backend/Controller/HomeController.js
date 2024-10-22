@@ -36,10 +36,12 @@ const getListItem = async (req, res) => {
 
         if (results) {
             console.timeEnd("Time excute: ")
+            // return res.send("Hello".repeat(10000))
             return res.status(200).json({ success: true, message: 'Get items successful.', data: results })
         }
 
         console.timeEnd("Time excute: ")
+
         return res.status(200).json({ success: false, message: 'No items found in database.' })
     
     } catch (error) {

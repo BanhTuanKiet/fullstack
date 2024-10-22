@@ -1,17 +1,23 @@
 require('dotenv').config()
 const express = require('express')
-const cors = require('cors')
+
+const limiter = require('./Config/ConfigRateLimit')
+const configCors = require('./Config/ConfigCors')
+const configCompress = require('./Config/ConfigCompression')
+
 const { baseRoute } = require('./Route/BaseRoutes')
 const { loginRoute } = require('./Route/LoginRoutes')
 const { authRoute } = require('./Route/AuthRoutes')
 const { verifyOTPRoute } = require('./Route/VerifyRoutes')
-const limiter = require('./middleware/RateLimit ')
+
 
 const port = process.env.PORT
 
 const app = express()
-app.use(cors())
+app.use(configCors)
 app.use(express.json())
+//Invoke-WebRequest -Uri http://localhost:3000/login -Method Get
+app.use(configCompress)
 
 app.use(limiter)
 app.use('/', baseRoute)

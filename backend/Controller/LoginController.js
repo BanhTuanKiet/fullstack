@@ -40,9 +40,7 @@ const login = async (req, res) => {
             const accessToken = jwt.sign({ email: email }, process.env.TOKEN_SECRET, { expiresIn: '5m'})
             const refreshToken = jwt.sign({ email: email }, process.env.TOKEN_SECRET, { expiresIn: '30m'})
 
-            return res.json({ 
-                success: true, message: 'Login successful.', data: result, accessToken: accessToken, refreshToken: refreshToken, 
-            })
+            return res.json({ success: true, message: 'Login successful.', data: result, accessToken: accessToken, refreshToken: refreshToken })
         }  
         
         return res.status(200).json({ success: false, message: 'Email not exist or password incorret.' })
