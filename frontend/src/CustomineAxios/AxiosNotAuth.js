@@ -3,6 +3,7 @@ import { Warning } from "../Utils/Notification"
 
 const instance = axios.create({
     baseURL: 'http://localhost:3000/',
+    withCredentials: true
 })
 
 instance.interceptors.request.use( async (config) => {

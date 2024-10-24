@@ -55,11 +55,7 @@ function Home() {
       try {
         if (user.email !== '') {
           console.log("get favorite items")
-          const res = await AxiosAuth.get(`/favorite`, {
-            headers: {
-              'Authorization': `${accessToken}`
-          }
-          })
+          const res = await AxiosAuth.get(`/favorite`)
           if (res.success) {
             setFavoritedItems(res.data)        
           }

@@ -1,8 +1,5 @@
-const { where } = require('sequelize')
-const Customer = require('../Model/Customer')
-const FavoritedItem = require('../Model/FavoritedItem')
 const { findIdCusByEmail } = require('../Service/CustomerService')
-const { addFavoritedItem } = require('../Service/FavoritedItemService')
+const { addFavoritedItem, deleteFavoritedItem, findAllFavoritedItems } = require('../Service/FavoritedItemService')
 
 const getFavoriteItems = async (req, res) => {
     try {
@@ -36,7 +33,7 @@ const deleteFavoriteItem = async (req, res) => {
             return res.status(200).json({ success: false, message: "User not found." })
         }
 
-        const result = await deleteFavoriteItem(cus_id.id, shoe_id)
+        const result = await deleteFavoritedItem(cus_id.id, shoe_id)
 
         if (result) {
             return res.status(200).json({ success: true, message: "Delete successfully."})

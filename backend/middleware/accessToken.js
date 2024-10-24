@@ -2,8 +2,7 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 const accessToken = (req, res, next) => {
-    const authorizationClient = req.headers['authorization']
-    const token = authorizationClient && authorizationClient
+    const token = req.cookies.token
 
     if (!token)
         return res.sendStatus(401)
@@ -12,7 +11,6 @@ const accessToken = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
         // Explanation token without validation.
         // jwt.decode(token, process.env.ACCESS_TOKEN_SECRET)
-        console.log(decoded)
         req.email = decoded.email
         req.status = 200
     } catch (err) {

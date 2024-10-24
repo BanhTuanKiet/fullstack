@@ -40,6 +40,13 @@ const login = async (req, res) => {
             const accessToken = jwt.sign({ email: email }, process.env.TOKEN_SECRET, { expiresIn: '5m'})
             const refreshToken = jwt.sign({ email: email }, process.env.TOKEN_SECRET, { expiresIn: '30m'})
 
+            res.cookie('token', accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 1000, //1 hour
+            })
+
             return res.json({ success: true, message: 'Login successful.', data: result, accessToken: accessToken, refreshToken: refreshToken })
         }  
         

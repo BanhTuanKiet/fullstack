@@ -36,11 +36,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         }
         // deleteFavoriteItem
         if (shoe_id.includes(id)) {
-            await AxiosAuth.delete(`/favorite?shoe_id=${id}`, {
-                headers: {
-                    'Authorization': `${accessToken}`,
-                }
-            })
+            await AxiosAuth.delete(`/favorite?shoe_id=${id}`)
             .then(res => {
                 if (res.success) {
                     const updatedFavorites = favoritedItems.filter(item => item.shoe_id !== id)
@@ -52,11 +48,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
             })
         // postFavoriteItem
         } else {
-            await AxiosAuth.post(`/favorite?shoe_id=${id}`, { refreshToken }, {
-                headers: {
-                    'Authorization': `${accessToken}`
-                }
-            })
+            await AxiosAuth.post(`/favorite?shoe_id=${id}`)
             .then(res => {
                 if (res.success) {
                     setFavoritedItems(prevItems => [...prevItems, { shoe_id: id }])
@@ -74,11 +66,7 @@ function ModalItem({ show, setShow, selectedItem, setIDItem, favoritedItems, set
         }
         console.log(name)
         
-        await AxiosAuth.put(`/items/purchase?shoe_id=${id}`, { refreshToken }, {
-            headers: {
-                'Authorization': `${accessToken}`
-            }
-        })
+        await AxiosAuth.put(`/items/purchase?shoe_id=${id}`)
         .then(res => {
             if (res.success) {
                 Success(res.message)

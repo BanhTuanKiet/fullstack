@@ -30,6 +30,11 @@ const getItem = (req, res) => {
 
 const getListItem = async (req, res) => {
     console.time("Time excute: ")
+    // res.cookie('cookieName', 'cookieValue', {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === 'production',
+    //     sameSite: 'strict',
+    // })
 
     try {
         const results = await getAllShoes()
@@ -53,18 +58,14 @@ const getListItem = async (req, res) => {
 const getItems = (req, res) => {
     try {
         const { shoe_name } = req.params
-
-        const arrItems =  getShoesByName(shoe_name)
-
-        if (!arrItems) {
-            return res.status(500).json({ success: false, message: "Internal server error. Items list not available." })
-        }
+        console.log(req.cookies)
+        const arrItems = getShoesByName(shoe_name)
 
         if (arrItems.length > 0) {
             return res.status(200).json({ success: true, message: 'Get items successful.', data: arrItems })
         }
 
-        return res.status(200).json({ success: false, message: `No items found with name: ${items}.` })
+        return res.status(200).json({ success: false, message: `No items found with name: ${shoe_name}.` })
     
     } catch (error) {
         return res.status(500).json({ success: false, message: "An error occurred while fetching the items."})

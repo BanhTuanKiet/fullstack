@@ -23,10 +23,12 @@ const addFavoritedItem = async (cus_id, shoe_id) => {
     return false
 }
 
-const deleteFavoriteItem = async (cus_id, shoe_id) => {
+const deleteFavoritedItem = async (cus_id, shoe_id) => {
     const result = await FavoritedItem.destroy({
-        cus_id: cus_id,
-        shoe_id: shoe_id
+        where: {
+            cus_id: cus_id,
+            shoe_id: shoe_id
+        }
     })
 
     if (result) {
@@ -39,5 +41,5 @@ const deleteFavoriteItem = async (cus_id, shoe_id) => {
 module.exports = {
     findAllFavoritedItems,
     addFavoritedItem,
-    deleteFavoriteItem
+    deleteFavoritedItem
 }

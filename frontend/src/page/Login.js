@@ -53,11 +53,7 @@ function Login() {
     const handleLogin = async () => {
       const userLogin = { email: user.email, password: user.password }
         try {
-          const res = await AxiosNotAuth.post(`/login`, userLogin, { 
-              headers: {
-                'password': user.password
-              }
-          })
+          const res = await AxiosNotAuth.post(`/login`, userLogin)
           if (res.success) {
             setData(res)
           } else {
